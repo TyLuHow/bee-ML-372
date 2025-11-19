@@ -1,0 +1,31 @@
+{
+  "pca_explained_variance": [
+    0.4870178050423112,
+    0.17824731082558504,
+    0.13795003063857536
+  ],
+  "pca_cumulative_variance": [
+    0.4870178050423112,
+    0.6652651158678962,
+    0.8032151465064715
+  ],
+  "n_compounds": 1035,
+  "n_features": 15,
+  "features_used": [
+    "MolecularWeight",
+    "LogP",
+    "NumHDonors",
+    "NumHAcceptors",
+    "NumRotatableBonds",
+    "NumAromaticRings",
+    "TPSA",
+    "NumHeteroatoms",
+    "NumRings",
+    "NumSaturatedRings",
+    "NumAliphaticRings",
+    "FractionCSP3",
+    "MolarRefractivity",
+    "BertzCT",
+    "HeavyAtomCount"
+  ]
+}

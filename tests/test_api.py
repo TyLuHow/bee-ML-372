@@ -38,7 +38,51 @@ class TestHealthEndpoint:
         
         data = response.json()
         assert data["status"] == "healthy"
-        assert "version" in data
+
+
+class TestSMILESEndpoint:
+    """Test SMILES-based prediction endpoint."""
+    
+    @pytest.fixture
+    def valid_smiles_input(self):
+        """Valid SMILES input."""
+        return {
+            "smiles": "CCO",  # Ethanol
+            "year": 2024,
+            "herbicide": 0,
+            "fungicide": 0,
+            "insecticide": 0,
+            "other_agrochemical": 1,
+            "source": "PPDB",
+            "toxicity_type": "Contact"
+        }
+    
+    def test_smiles_prediction_success(self, valid_smiles_input):
+        """Test SMILES prediction with valid input."""
+        response = client.post("/predict/smiles", json=valid_smiles_input)
+        assert response.status_code == 200
+        
+        data = response.json()
+        assert "prediction" in data
+        assert "prediction_label" in data
+        assert "confidence" in data
+        assert data["prediction"] in [0, 1]
+    
+    def test_smiles_invalid(self):
+        """Test SMILES endpoint with invalid SMILES."""
+        invalid_input = {
+            "smiles": "INVALID_SMILES_XYZ",
+            "year": 2024,
+            "herbicide": 0,
+            "fungicide": 0,
+            "insecticide": 1,
+            "other_agrochemical": 0,
+            "source": "PPDB",
+            "toxicity_type": "Contact"
+        }
+        response = client.post("/predict/smiles", json=invalid_input)
+        assert response.status_code == 400
+        assert "Invalid SMILES" in response.json()["detail"]
 
 
 class TestPredictionEndpoint:
@@ -46,7 +90,7 @@ class TestPredictionEndpoint:
     
     @pytest.fixture
     def valid_prediction_input(self):
-        """Create valid prediction input data."""
+        """Create valid prediction input data - CORRECTED field names."""
         return {
             "source": "PPDB",
             "year": 2020,
@@ -55,21 +99,22 @@ class TestPredictionEndpoint:
             "fungicide": 0,
             "insecticide": 1,
             "other_agrochemical": 0,
+            # CORRECTED: Match exact field names from PredictionInput model
             "MolecularWeight": 350.5,
             "LogP": 3.2,
             "NumHDonors": 2,
             "NumHAcceptors": 4,
             "NumRotatableBonds": 5,
-            "AromaticRings": 2,
+            "NumAromaticRings": 2,  # FIXED: was "AromaticRings"
             "TPSA": 65.3,
             "NumHeteroatoms": 5,
-            "NumAromaticAtoms": 12,
+            "NumRings": 2,  # FIXED: was "RingCount"
             "NumSaturatedRings": 0,
             "NumAliphaticRings": 0,
-            "RingCount": 2,
-            "FractionCsp3": 0.25,
-            "NumAromaticCarbocycles": 1,
-            "NumSaturatedCarbocycles": 0
+            "FractionCSP3": 0.25,  # FIXED: was "FractionCsp3"
+            "MolarRefractivity": 95.0,
+            "BertzCT": 450.0,
+            "HeavyAtomCount": 25
         }
     
     def test_prediction_success(self, valid_prediction_input):

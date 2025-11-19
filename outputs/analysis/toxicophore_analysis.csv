@@ -1,0 +1,21 @@
+toxicophore,display_name,n_compounds,n_toxic,n_nontoxic,toxicity_rate,baseline_rate,enrichment,odds_ratio,chi_square,p_value,significant
+organophosphate,Organophosphate,51,32,19,62.75,26.83,2.34,4.59,28.896,0.0,True
+cyano_group,Cyano Group,58,36,22,62.07,26.61,2.33,4.51,31.9936,0.0,True
+phosphate,Phosphate,45,27,18,60.0,27.17,2.21,4.02,21.1376,0.0,True
+carbamate,Carbamate,64,34,30,53.12,26.98,1.97,3.07,18.8356,0.0,True
+phenylpyrazole,Phenylpyrazole,4,2,2,50.0,28.52,1.75,2.51,0.1558,0.6931,False
+pyrethroid_ester,Pyrethroid Ester,201,70,131,34.83,27.1,1.29,1.44,4.3655,0.0367,True
+neonicotinoid_core,Neonicotinoid,15,5,10,33.33,28.53,1.17,1.25,0.0146,0.9037,False
+nitro_group,Nitro Group,52,15,37,28.85,28.59,1.01,1.01,0.0,1.0,False
+oxime,Oxime,32,9,23,28.12,28.61,0.98,0.98,0.0,1.0,False
+methylenedioxyphenyl,Methylenedioxyphenyl,4,1,3,25.0,28.61,0.87,0.83,0.0,1.0,False
+pyridine,Pyridine Ring,102,23,79,22.55,29.26,0.77,0.7,1.7129,0.1906,False
+aromatic_halogen,Aromatic Halogen,353,81,272,22.95,31.52,0.73,0.65,7.9684,0.0048,True
+imidazole,Imidazole Ring,19,4,15,21.05,28.74,0.73,0.66,0.229,0.6323,False
+chlorinated_aromatic,Chlorinated Aromatic,302,67,235,22.19,31.24,0.71,0.63,8.1522,0.0043,True
+fluorinated,Trifluoromethyl,105,22,83,20.95,29.46,0.71,0.63,2.9423,0.0863,False
+phenol,Phenol,18,3,15,16.67,28.81,0.58,0.49,0.7518,0.3859,False
+urea_derivative,Urea Derivative,91,14,77,15.38,29.87,0.52,0.43,7.8372,0.0051,True
+aromatic_amine,Aromatic Amine,301,52,249,17.28,33.24,0.52,0.42,25.874,0.0,True
+sulfonyl,Sulfonyl,113,16,97,14.16,30.37,0.47,0.38,12.1708,0.0005,True
+triazole,Triazole Ring,55,5,50,9.09,29.69,0.31,0.24,9.8402,0.0017,True

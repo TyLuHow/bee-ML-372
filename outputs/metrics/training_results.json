@@ -2,44 +2,122 @@
   "logistic": {
     "model_name": "logistic",
     "train_metrics": {
-      "accuracy": 0.8230174081237911,
-      "precision": 0.826171875,
-      "recall": 0.8181818181818182,
-      "f1": 0.8221574344023324,
-      "roc_auc": 0.8865722121000116,
+      "accuracy": 0.8239845261121856,
+      "precision": 0.8265107212475633,
+      "recall": 0.8201160541586073,
+      "f1": 0.8233009708737864,
+      "roc_auc": 0.8870885071963306,
       "confusion_matrix": [
         [
           428,
           89
         ],
         [
-          94,
-          423
+          93,
+          424
         ]
       ]
     },
     "val_metrics": {
-      "accuracy": 0.8173076923076923,
-      "precision": 0.6486486486486487,
-      "recall": 0.8,
-      "f1": 0.7164179104477612,
-      "roc_auc": 0.8567567567567568,
+      "accuracy": 0.8269230769230769,
+      "precision": 0.6578947368421053,
+      "recall": 0.8333333333333334,
+      "f1": 0.7352941176470589,
+      "roc_auc": 0.8626126126126127,
       "confusion_matrix": [
         [
           61,
           13
         ],
         [
-          6,
-          24
+          5,
+          25
         ]
       ]
     },
-    "training_time": 3.290153980255127,
-    "timestamp": "2025-11-07T13:45:12.093354"
+    "training_time": 4.6505286693573,
+    "timestamp": "2025-11-12T10:46:30.576556"
   },
   "random_forest": {
     "model_name": "random_forest",
+    "train_metrics": {
+      "accuracy": 0.9922630560928434,
+      "precision": 0.9884836852207294,
+      "recall": 0.9961315280464217,
+      "f1": 0.9922928709055877,
+      "roc_auc": 0.9998241603657464,
+      "confusion_matrix": [
+        [
+          511,
+          6
+        ],
+        [
+          2,
+          515
+        ]
+      ]
+    },
+    "val_metrics": {
+      "accuracy": 0.8653846153846154,
+      "precision": 0.8076923076923077,
+      "recall": 0.7,
+      "f1": 0.75,
+      "roc_auc": 0.8833333333333333,
+      "confusion_matrix": [
+        [
+          69,
+          5
+        ],
+        [
+          9,
+          21
+        ]
+      ]
+    },
+    "training_time": 15.830342531204224,
+    "timestamp": "2025-11-12T10:46:46.941024"
+  },
+  "xgboost": {
+    "model_name": "xgboost",
+    "train_metrics": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "roc_auc": 1.0,
+      "confusion_matrix": [
+        [
+          517,
+          0
+        ],
+        [
+          0,
+          517
+        ]
+      ]
+    },
+    "val_metrics": {
+      "accuracy": 0.8653846153846154,
+      "precision": 0.8076923076923077,
+      "recall": 0.7,
+      "f1": 0.75,
+      "roc_auc": 0.8702702702702704,
+      "confusion_matrix": [
+        [
+          69,
+          5
+        ],
+        [
+          9,
+          21
+        ]
+      ]
+    },
+    "training_time": 24.669658184051514,
+    "timestamp": "2025-11-12T10:47:11.655447"
+  },
+  "lightgbm": {
+    "model_name": "lightgbm",
     "train_metrics": {
       "accuracy": 1.0,
       "precision": 1.0,
@@ -62,7 +140,7 @@
       "precision": 0.7916666666666666,
       "recall": 0.6333333333333333,
       "f1": 0.7037037037037037,
-      "roc_auc": 0.8896396396396397,
+      "roc_auc": 0.8734234234234234,
       "confusion_matrix": [
         [
           69,
@@ -74,46 +152,7 @@
         ]
       ]
     },
-    "training_time": 0.3064882755279541,
-    "timestamp": "2025-11-07T13:45:12.791890"
-  },
-  "xgboost": {
-    "model_name": "xgboost",
-    "train_metrics": {
-      "accuracy": 1.0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "roc_auc": 1.0,
-      "confusion_matrix": [
-        [
-          517,
-          0
-        ],
-        [
-          0,
-          517
-        ]
-      ]
-    },
-    "val_metrics": {
-      "accuracy": 0.8557692307692307,
-      "precision": 0.7777777777777778,
-      "recall": 0.7,
-      "f1": 0.7368421052631579,
-      "roc_auc": 0.8788288288288288,
-      "confusion_matrix": [
-        [
-          68,
-          6
-        ],
-        [
-          9,
-          21
-        ]
-      ]
-    },
-    "training_time": 1.7638990879058838,
-    "timestamp": "2025-11-07T13:45:14.608827"
+    "training_time": 275.4470925331116,
+    "timestamp": "2025-11-12T10:51:47.146747"
   }
 }

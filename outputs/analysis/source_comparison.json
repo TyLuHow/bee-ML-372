@@ -1,0 +1,79 @@
+{
+  "summary": {
+    "n_total": 1035,
+    "sources": [
+      "ECOTOX",
+      "BPDB",
+      "PPDB"
+    ],
+    "source_counts": {
+      "0": {
+        "BPDB": 68,
+        "ECOTOX": 284,
+        "PPDB": 387
+      },
+      "1": {
+        "BPDB": 16,
+        "ECOTOX": 157,
+        "PPDB": 123
+      }
+    },
+    "chi_square_statistic": 19.356569489332514,
+    "chi_square_p_value": 6.262883614253654e-05,
+    "significant_difference": true,
+    "n_overlapping_compounds": 5,
+    "agreement_rate_pct": 60.0
+  },
+  "source_statistics": {
+    "BPDB": {
+      "n_compounds": 84,
+      "n_toxic": 16,
+      "toxicity_rate_pct": 19.047619047619047,
+      "year_range": {
+        "min": 1833,
+        "max": 2021,
+        "mean": 1951.0119047619048
+      }
+    },
+    "ECOTOX": {
+      "n_compounds": 441,
+      "n_toxic": 157,
+      "toxicity_rate_pct": 35.600907029478456,
+      "year_range": {
+        "min": 1832,
+        "max": 2023,
+        "mean": 1965.2290249433106
+      }
+    },
+    "PPDB": {
+      "n_compounds": 510,
+      "n_toxic": 123,
+      "toxicity_rate_pct": 24.11764705882353,
+      "year_range": {
+        "min": 1836,
+        "max": 2023,
+        "mean": 1975.6803921568628
+      }
+    }
+  },
+  "disagreement_examples": [
+    {
+      "CID": 5284484,
+      "name": "Metiram (Ref: BAS 222F)",
+      "source_1": "PPDB",
+      "source_2": "PPDB",
+      "label_1": 0,
+      "label_2": 1,
+      "agreement": false
+    },
+    {
+      "CID": 93341,
+      "name": "Diclomezine (Ref: F-850)",
+      "source_1": "PPDB",
+      "source_2": "PPDB",
+      "label_1": 0,
+      "label_2": 1,
+      "agreement": false
+    }
+  ]
+}

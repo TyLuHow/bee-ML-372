@@ -344,7 +344,7 @@ class ModelTrainer:
         self.models[model_name] = best_model
         self.results[model_name] = result
         
-        print(f"\n✓ {model_name} training complete (Time: {training_time:.2f}s)")
+        print(f"\n  {model_name} training complete (Time: {training_time:.2f}s)")
         
         return result
     
@@ -438,7 +438,7 @@ class ModelTrainer:
                 )
                 all_results[model_name] = result
             except Exception as e:
-                print(f"\n✗ Error training {model_name}: {str(e)}")
+                print(f"\n  Error training {model_name}: {str(e)}")
                 continue
         
         # Create comparison table
@@ -488,9 +488,9 @@ class ModelTrainer:
         
         if best_model_name:
             self.best_model = self.models[best_model_name]
-            print(f"\n✓ Best model: {best_model_name} (Validation {metric.upper()}: {best_score:.4f})")
+            print(f"\n  Best model: {best_model_name} (Validation {metric.upper()}: {best_score:.4f})")
         else:
-            print("\n✗ Could not select best model")
+            print("\n  Could not select best model")
     
     def evaluate_on_test(
         self,
@@ -540,7 +540,7 @@ class ModelTrainer:
             raise ValueError(f"Model {model_name} not found!")
         
         joblib.dump(self.models[model_name], filepath)
-        print(f"✓ Model saved: {filepath}")
+        print(f"  Model saved: {filepath}")
     
     def save_results(self, filepath: str):
         """Save training results to JSON."""
@@ -558,7 +558,7 @@ class ModelTrainer:
         with open(filepath, 'w') as f:
             json.dump(results_json, f, indent=2)
         
-        print(f"✓ Results saved: {filepath}")
+        print(f"  Results saved: {filepath}")
 
 
 def main():
@@ -602,7 +602,7 @@ def main():
     trainer.save_results('outputs/metrics/training_results.json')
     
     print("\n" + "="*80)
-    print("✓ PHASE 3 COMPLETE")
+    print("  PHASE 3 COMPLETE")
     print("="*80)
 
 

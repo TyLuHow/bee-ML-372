@@ -12,9 +12,14 @@ numpy==1.26.2
 scikit-learn==1.4.0
 xgboost==2.0.3
 joblib==1.3.2
+rdkit==2023.9.5
 
 # Data processing
 pandas==2.1.4
+
+# Analysis & Visualization
+plotly==5.18.0
+scipy==1.11.4
 
 # Interpretability (optional - may exceed size limits)
 # shap==0.43.0  # Comment out if Lambda size exceeded

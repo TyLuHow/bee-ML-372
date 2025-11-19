@@ -1,0 +1,797 @@
+{
+  "mann_kendall_tau": -0.2997569212432664,
+  "mann_kendall_p_value": 0.00025476263910356967,
+  "trend_direction": "decreasing (significant)",
+  "significant": true,
+  "linear_slope": -0.1316781628158132,
+  "linear_r_squared": 0.047708640702802875,
+  "years_analyzed": 71,
+  "year_range": {
+    "min": 1862,
+    "max": 2023
+  },
+  "overall_toxicity_rate": 0.28599033816425123,
+  "yearly_data": [
+    {
+      "year": 1862,
+      "toxicity_rate": 0.0,
+      "n_compounds": 5,
+      "n_toxic": 0,
+      "toxicity_pct": 0.0,
+      "n_non_toxic": 5,
+      "rolling_avg": 21.32034632034632
+    },
+    {
+      "year": 1877,
+      "toxicity_rate": 0.16666666666666666,
+      "n_compounds": 6,
+      "n_toxic": 1,
+      "toxicity_pct": 16.666666666666664,
+      "n_non_toxic": 5,
+      "rolling_avg": 22.528860028860027
+    },
+    {
+      "year": 1945,
+      "toxicity_rate": 0.2857142857142857,
+      "n_compounds": 14,
+      "n_toxic": 4,
+      "toxicity_pct": 28.57142857142857,
+      "n_non_toxic": 10,
+      "rolling_avg": 25.90385804671519
+    },
+    {
+      "year": 1946,
+      "toxicity_rate": 0.25,
+      "n_compounds": 12,
+      "n_toxic": 3,
+      "toxicity_pct": 25.0,
+      "n_non_toxic": 9,
+      "rolling_avg": 26.832542457542456
+    },
+    {
+      "year": 1947,
+      "toxicity_rate": 0.36363636363636365,
+      "n_compounds": 11,
+      "n_toxic": 4,
+      "toxicity_pct": 36.36363636363637,
+      "n_non_toxic": 7,
+      "rolling_avg": 28.295593295593292
+    },
+    {
+      "year": 1948,
+      "toxicity_rate": 0.2857142857142857,
+      "n_compounds": 7,
+      "n_toxic": 2,
+      "toxicity_pct": 28.57142857142857,
+      "n_non_toxic": 5,
+      "rolling_avg": 31.71603396603397
+    },
+    {
+      "year": 1950,
+      "toxicity_rate": 0.46153846153846156,
+      "n_compounds": 13,
+      "n_toxic": 6,
+      "toxicity_pct": 46.15384615384615,
+      "n_non_toxic": 7,
+      "rolling_avg": 35.71603396603397
+    },
+    {
+      "year": 1954,
+      "toxicity_rate": 0.3333333333333333,
+      "n_compounds": 6,
+      "n_toxic": 2,
+      "toxicity_pct": 33.33333333333333,
+      "n_non_toxic": 4,
+      "rolling_avg": 35.47793872793873
+    },
+    {
+      "year": 1955,
+      "toxicity_rate": 0.4,
+      "n_compounds": 10,
+      "n_toxic": 4,
+      "toxicity_pct": 40.0,
+      "n_non_toxic": 6,
+      "rolling_avg": 36.370795870795874
+    },
+    {
+      "year": 1956,
+      "toxicity_rate": 0.625,
+      "n_compounds": 8,
+      "n_toxic": 5,
+      "toxicity_pct": 62.5,
+      "n_non_toxic": 3,
+      "rolling_avg": 39.426351426351424
+    },
+    {
+      "year": 1957,
+      "toxicity_rate": 0.4,
+      "n_compounds": 5,
+      "n_toxic": 2,
+      "toxicity_pct": 40.0,
+      "n_non_toxic": 3,
+      "rolling_avg": 38.42156673735621
+    },
+    {
+      "year": 1958,
+      "toxicity_rate": 0.14285714285714285,
+      "n_compounds": 7,
+      "n_toxic": 1,
+      "toxicity_pct": 14.285714285714285,
+      "n_non_toxic": 6,
+      "rolling_avg": 41.564423880213354
+    },
+    {
+      "year": 1959,
+      "toxicity_rate": 0.375,
+      "n_compounds": 8,
+      "n_toxic": 3,
+      "toxicity_pct": 37.5,
+      "n_non_toxic": 5,
+      "rolling_avg": 39.94903926482874
+    },
+    {
+      "year": 1960,
+      "toxicity_rate": 0.5555555555555556,
+      "n_compounds": 9,
+      "n_toxic": 5,
+      "toxicity_pct": 55.55555555555556,
+      "n_non_toxic": 4,
+      "rolling_avg": 40.615705931495405
+    },
+    {
+      "year": 1961,
+      "toxicity_rate": 0.2631578947368421,
+      "n_compounds": 19,
+      "n_toxic": 5,
+      "toxicity_pct": 26.31578947368421,
+      "n_non_toxic": 14,
+      "rolling_avg": 39.740705931495405
+    },
+    {
+      "year": 1962,
+      "toxicity_rate": 0.6,
+      "n_compounds": 10,
+      "n_toxic": 6,
+      "toxicity_pct": 60.0,
+      "n_non_toxic": 4,
+      "rolling_avg": 39.490705931495405
+    },
+    {
+      "year": 1963,
+      "toxicity_rate": 0.3,
+      "n_compounds": 10,
+      "n_toxic": 3,
+      "toxicity_pct": 30.0,
+      "n_non_toxic": 7,
+      "rolling_avg": 41.64455208534156
+    },
+    {
+      "year": 1964,
+      "toxicity_rate": 0.4,
+      "n_compounds": 10,
+      "n_toxic": 4,
+      "toxicity_pct": 40.0,
+      "n_non_toxic": 6,
+      "rolling_avg": 44.88264732343679
+    },
+    {
+      "year": 1965,
+      "toxicity_rate": 0.3125,
+      "n_compounds": 16,
+      "n_toxic": 5,
+      "toxicity_pct": 31.25,
+      "n_non_toxic": 11,
+      "rolling_avg": 46.51726270805218
+    },
+    {
+      "year": 1966,
+      "toxicity_rate": 0.6,
+      "n_compounds": 5,
+      "n_toxic": 3,
+      "toxicity_pct": 60.0,
+      "n_non_toxic": 2,
+      "rolling_avg": 45.24742143821091
+    },
+    {
+      "year": 1967,
+      "toxicity_rate": 0.6153846153846154,
+      "n_compounds": 13,
+      "n_toxic": 8,
+      "toxicity_pct": 61.53846153846154,
+      "n_non_toxic": 5,
+      "rolling_avg": 46.4253663003663
+    },
+    {
+      "year": 1968,
+      "toxicity_rate": 0.4666666666666667,
+      "n_compounds": 15,
+      "n_toxic": 7,
+      "toxicity_pct": 46.666666666666664,
+      "n_non_toxic": 8,
+      "rolling_avg": 43.50228937728938
+    },
+    {
+      "year": 1969,
+      "toxicity_rate": 0.5384615384615384,
+      "n_compounds": 13,
+      "n_toxic": 7,
+      "toxicity_pct": 53.84615384615385,
+      "n_non_toxic": 6,
+      "rolling_avg": 45.83562271062271
+    },
+    {
+      "year": 1970,
+      "toxicity_rate": 0.42857142857142855,
+      "n_compounds": 14,
+      "n_toxic": 6,
+      "toxicity_pct": 42.857142857142854,
+      "n_non_toxic": 8,
+      "rolling_avg": 45.58562271062271
+    },
+    {
+      "year": 1971,
+      "toxicity_rate": 0.38095238095238093,
+      "n_compounds": 21,
+      "n_toxic": 8,
+      "toxicity_pct": 38.095238095238095,
+      "n_non_toxic": 13,
+      "rolling_avg": 45.187895437895435
+    },
+    {
+      "year": 1972,
+      "toxicity_rate": 0.3076923076923077,
+      "n_compounds": 13,
+      "n_toxic": 4,
+      "toxicity_pct": 30.76923076923077,
+      "n_non_toxic": 9,
+      "rolling_avg": 41.33075258075258
+    },
+    {
+      "year": 1973,
+      "toxicity_rate": 0.5333333333333333,
+      "n_compounds": 15,
+      "n_toxic": 8,
+      "toxicity_pct": 53.333333333333336,
+      "n_non_toxic": 7,
+      "rolling_avg": 37.90417915417915
+    },
+    {
+      "year": 1974,
+      "toxicity_rate": 0.375,
+      "n_compounds": 16,
+      "n_toxic": 6,
+      "toxicity_pct": 37.5,
+      "n_non_toxic": 10,
+      "rolling_avg": 38.23751248751249
+    },
+    {
+      "year": 1975,
+      "toxicity_rate": 0.2727272727272727,
+      "n_compounds": 11,
+      "n_toxic": 3,
+      "toxicity_pct": 27.27272727272727,
+      "n_non_toxic": 8,
+      "rolling_avg": 34.18623043623044
+    },
+    {
+      "year": 1976,
+      "toxicity_rate": 0.21428571428571427,
+      "n_compounds": 28,
+      "n_toxic": 6,
+      "toxicity_pct": 21.428571428571427,
+      "n_non_toxic": 22,
+      "rolling_avg": 34.900516150516154
+    },
+    {
+      "year": 1977,
+      "toxicity_rate": 0.2727272727272727,
+      "n_compounds": 11,
+      "n_toxic": 3,
+      "toxicity_pct": 27.27272727272727,
+      "n_non_toxic": 8,
+      "rolling_avg": 36.090992340992344
+    },
+    {
+      "year": 1978,
+      "toxicity_rate": 0.5,
+      "n_compounds": 8,
+      "n_toxic": 4,
+      "toxicity_pct": 50.0,
+      "n_non_toxic": 4,
+      "rolling_avg": 36.86022311022311
+    },
+    {
+      "year": 1979,
+      "toxicity_rate": 0.13333333333333333,
+      "n_compounds": 15,
+      "n_toxic": 2,
+      "toxicity_pct": 13.333333333333334,
+      "n_non_toxic": 13,
+      "rolling_avg": 34.193556443556446
+    },
+    {
+      "year": 1980,
+      "toxicity_rate": 0.5,
+      "n_compounds": 12,
+      "n_toxic": 6,
+      "toxicity_pct": 50.0,
+      "n_non_toxic": 6,
+      "rolling_avg": 31.982017982017982
+    },
+    {
+      "year": 1981,
+      "toxicity_rate": 0.5,
+      "n_compounds": 12,
+      "n_toxic": 6,
+      "toxicity_pct": 50.0,
+      "n_non_toxic": 6,
+      "rolling_avg": 30.254745254745256
+    },
+    {
+      "year": 1982,
+      "toxicity_rate": 0.38461538461538464,
+      "n_compounds": 13,
+      "n_toxic": 5,
+      "toxicity_pct": 38.46153846153847,
+      "n_non_toxic": 8,
+      "rolling_avg": 29.77855477855478
+    },
+    {
+      "year": 1984,
+      "toxicity_rate": 0.26666666666666666,
+      "n_compounds": 15,
+      "n_toxic": 4,
+      "toxicity_pct": 26.666666666666668,
+      "n_non_toxic": 11,
+      "rolling_avg": 28.162393162393165
+    },
+    {
+      "year": 1985,
+      "toxicity_rate": 0.15384615384615385,
+      "n_compounds": 13,
+      "n_toxic": 2,
+      "toxicity_pct": 15.384615384615385,
+      "n_non_toxic": 11,
+      "rolling_avg": 25.662393162393165
+    },
+    {
+      "year": 1986,
+      "toxicity_rate": 0.1,
+      "n_compounds": 10,
+      "n_toxic": 1,
+      "toxicity_pct": 10.0,
+      "n_non_toxic": 9,
+      "rolling_avg": 26.329059829059833
+    },
+    {
+      "year": 1987,
+      "toxicity_rate": 0.16666666666666666,
+      "n_compounds": 12,
+      "n_toxic": 2,
+      "toxicity_pct": 16.666666666666664,
+      "n_non_toxic": 10,
+      "rolling_avg": 23.636752136752136
+    },
+    {
+      "year": 1988,
+      "toxicity_rate": 0.1111111111111111,
+      "n_compounds": 9,
+      "n_toxic": 1,
+      "toxicity_pct": 11.11111111111111,
+      "n_non_toxic": 8,
+      "rolling_avg": 20.236752136752138
+    },
+    {
+      "year": 1989,
+      "toxicity_rate": 0.25,
+      "n_compounds": 12,
+      "n_toxic": 3,
+      "toxicity_pct": 25.0,
+      "n_non_toxic": 9,
+      "rolling_avg": 18.32608216156603
+    },
+    {
+      "year": 1990,
+      "toxicity_rate": 0.2,
+      "n_compounds": 20,
+      "n_toxic": 4,
+      "toxicity_pct": 20.0,
+      "n_non_toxic": 16,
+      "rolling_avg": 16.428646264130133
+    },
+    {
+      "year": 1991,
+      "toxicity_rate": 0.23076923076923078,
+      "n_compounds": 26,
+      "n_toxic": 6,
+      "toxicity_pct": 23.076923076923077,
+      "n_non_toxic": 20,
+      "rolling_avg": 17.390184725668597
+    },
+    {
+      "year": 1992,
+      "toxicity_rate": 0.16,
+      "n_compounds": 25,
+      "n_toxic": 4,
+      "toxicity_pct": 16.0,
+      "n_non_toxic": 21,
+      "rolling_avg": 16.390184725668597
+    },
+    {
+      "year": 1993,
+      "toxicity_rate": 0.1935483870967742,
+      "n_compounds": 31,
+      "n_toxic": 6,
+      "toxicity_pct": 19.35483870967742,
+      "n_non_toxic": 25,
+      "rolling_avg": 20.97351805900193
+    },
+    {
+      "year": 1994,
+      "toxicity_rate": 0.07692307692307693,
+      "n_compounds": 13,
+      "n_toxic": 1,
+      "toxicity_pct": 7.6923076923076925,
+      "n_non_toxic": 12,
+      "rolling_avg": 21.862406947890822
+    },
+    {
+      "year": 1995,
+      "toxicity_rate": 0.25,
+      "n_compounds": 8,
+      "n_toxic": 2,
+      "toxicity_pct": 25.0,
+      "n_non_toxic": 6,
+      "rolling_avg": 20.162406947890823
+    },
+    {
+      "year": 1996,
+      "toxicity_rate": 0.0,
+      "n_compounds": 6,
+      "n_toxic": 0,
+      "toxicity_pct": 0.0,
+      "n_non_toxic": 6,
+      "rolling_avg": 20.662406947890823
+    },
+    {
+      "year": 1997,
+      "toxicity_rate": 0.625,
+      "n_compounds": 8,
+      "n_toxic": 5,
+      "toxicity_pct": 62.5,
+      "n_non_toxic": 3,
+      "rolling_avg": 19.89317617866005
+    },
+    {
+      "year": 1998,
+      "toxicity_rate": 0.2,
+      "n_compounds": 5,
+      "n_toxic": 1,
+      "toxicity_pct": 20.0,
+      "n_non_toxic": 4,
+      "rolling_avg": 19.597524004747005
+    },
+    {
+      "year": 1999,
+      "toxicity_rate": 0.08,
+      "n_compounds": 25,
+      "n_toxic": 2,
+      "toxicity_pct": 8.0,
+      "n_non_toxic": 23,
+      "rolling_avg": 17.662040133779264
+    },
+    {
+      "year": 2000,
+      "toxicity_rate": 0.25,
+      "n_compounds": 12,
+      "n_toxic": 3,
+      "toxicity_pct": 25.0,
+      "n_non_toxic": 9,
+      "rolling_avg": 16.892809364548498
+    },
+    {
+      "year": 2001,
+      "toxicity_rate": 0.15384615384615385,
+      "n_compounds": 13,
+      "n_toxic": 2,
+      "toxicity_pct": 15.384615384615385,
+      "n_non_toxic": 11,
+      "rolling_avg": 16.65087388067753
+    },
+    {
+      "year": 2002,
+      "toxicity_rate": 0.13043478260869565,
+      "n_compounds": 23,
+      "n_toxic": 3,
+      "toxicity_pct": 13.043478260869565,
+      "n_non_toxic": 20,
+      "rolling_avg": 18.317540547344194
+    },
+    {
+      "year": 2003,
+      "toxicity_rate": 0.0,
+      "n_compounds": 5,
+      "n_toxic": 0,
+      "toxicity_pct": 0.0,
+      "n_non_toxic": 5,
+      "rolling_avg": 13.496111975915621
+    },
+    {
+      "year": 2004,
+      "toxicity_rate": 0.0,
+      "n_compounds": 5,
+      "n_toxic": 0,
+      "toxicity_pct": 0.0,
+      "n_non_toxic": 5,
+      "rolling_avg": 13.996111975915621
+    },
+    {
+      "year": 2005,
+      "toxicity_rate": 0.22580645161290322,
+      "n_compounds": 31,
+      "n_toxic": 7,
+      "toxicity_pct": 22.58064516129032,
+      "n_non_toxic": 24,
+      "rolling_avg": 13.196111975915622
+    },
+    {
+      "year": 2006,
+      "toxicity_rate": 0.16666666666666666,
+      "n_compounds": 12,
+      "n_toxic": 2,
+      "toxicity_pct": 16.666666666666664,
+      "n_non_toxic": 10,
+      "rolling_avg": 14.029445309248956
+    },
+    {
+      "year": 2007,
+      "toxicity_rate": 0.14285714285714285,
+      "n_compounds": 14,
+      "n_toxic": 2,
+      "toxicity_pct": 14.285714285714285,
+      "n_non_toxic": 12,
+      "rolling_avg": 14.990983770787414
+    },
+    {
+      "year": 2008,
+      "toxicity_rate": 0.25,
+      "n_compounds": 8,
+      "n_toxic": 2,
+      "toxicity_pct": 25.0,
+      "n_non_toxic": 6,
+      "rolling_avg": 17.01996927803379
+    },
+    {
+      "year": 2009,
+      "toxicity_rate": 0.0,
+      "n_compounds": 6,
+      "n_toxic": 0,
+      "toxicity_pct": 0.0,
+      "n_non_toxic": 6,
+      "rolling_avg": 19.877112135176652
+    },
+    {
+      "year": 2010,
+      "toxicity_rate": 0.3333333333333333,
+      "n_compounds": 9,
+      "n_toxic": 3,
+      "toxicity_pct": 33.33333333333333,
+      "n_non_toxic": 6,
+      "rolling_avg": 23.21044546850998
+    },
+    {
+      "year": 2011,
+      "toxicity_rate": 0.25,
+      "n_compounds": 8,
+      "n_toxic": 2,
+      "toxicity_pct": 25.0,
+      "n_non_toxic": 6,
+      "rolling_avg": 22.202380952380953
+    },
+    {
+      "year": 2012,
+      "toxicity_rate": 0.3333333333333333,
+      "n_compounds": 6,
+      "n_toxic": 2,
+      "toxicity_pct": 33.33333333333333,
+      "n_non_toxic": 4,
+      "rolling_avg": 25.535714285714285
+    },
+    {
+      "year": 2013,
+      "toxicity_rate": 0.2857142857142857,
+      "n_compounds": 7,
+      "n_toxic": 2,
+      "toxicity_pct": 28.57142857142857,
+      "n_non_toxic": 5,
+      "rolling_avg": 25.107142857142854
+    },
+    {
+      "year": 2014,
+      "toxicity_rate": 0.3333333333333333,
+      "n_compounds": 9,
+      "n_toxic": 3,
+      "toxicity_pct": 33.33333333333333,
+      "n_non_toxic": 6,
+      "rolling_avg": 22.607142857142854
+    },
+    {
+      "year": 2015,
+      "toxicity_rate": 0.125,
+      "n_compounds": 8,
+      "n_toxic": 1,
+      "toxicity_pct": 12.5,
+      "n_non_toxic": 7,
+      "rolling_avg": 25.119047619047617
+    },
+    {
+      "year": 2016,
+      "toxicity_rate": 0.5,
+      "n_compounds": 8,
+      "n_toxic": 4,
+      "toxicity_pct": 50.0,
+      "n_non_toxic": 4,
+      "rolling_avg": 24.092261904761905
+    },
+    {
+      "year": 2017,
+      "toxicity_rate": 0.1,
+      "n_compounds": 10,
+      "n_toxic": 1,
+      "toxicity_pct": 10.0,
+      "n_non_toxic": 9,
+      "rolling_avg": 23.962585034013607
+    },
+    {
+      "year": 2023,
+      "toxicity_rate": 0.0,
+      "n_compounds": 5,
+      "n_toxic": 0,
+      "toxicity_pct": 0.0,
+      "n_non_toxic": 5,
+      "rolling_avg": 22.40079365079365
+    }
+  ],
+  "decade_data": [
+    {
+      "decade": 1830,
+      "toxicity_rate": 0.3333333333333333,
+      "n_compounds": 6,
+      "n_toxic": 2,
+      "toxicity_pct": 33.33333333333333
+    },
+    {
+      "decade": 1840,
+      "toxicity_rate": 0.0,
+      "n_compounds": 2,
+      "n_toxic": 0,
+      "toxicity_pct": 0.0
+    },
+    {
+      "decade": 1850,
+      "toxicity_rate": 0.5714285714285714,
+      "n_compounds": 14,
+      "n_toxic": 8,
+      "toxicity_pct": 57.14285714285714
+    },
+    {
+      "decade": 1860,
+      "toxicity_rate": 0.2777777777777778,
+      "n_compounds": 18,
+      "n_toxic": 5,
+      "toxicity_pct": 27.77777777777778
+    },
+    {
+      "decade": 1870,
+      "toxicity_rate": 0.10526315789473684,
+      "n_compounds": 19,
+      "n_toxic": 2,
+      "toxicity_pct": 10.526315789473683
+    },
+    {
+      "decade": 1880,
+      "toxicity_rate": 0.19047619047619047,
+      "n_compounds": 21,
+      "n_toxic": 4,
+      "toxicity_pct": 19.047619047619047
+    },
+    {
+      "decade": 1890,
+      "toxicity_rate": 0.3125,
+      "n_compounds": 16,
+      "n_toxic": 5,
+      "toxicity_pct": 31.25
+    },
+    {
+      "decade": 1900,
+      "toxicity_rate": 0.3684210526315789,
+      "n_compounds": 19,
+      "n_toxic": 7,
+      "toxicity_pct": 36.84210526315789
+    },
+    {
+      "decade": 1910,
+      "toxicity_rate": 0.5555555555555556,
+      "n_compounds": 9,
+      "n_toxic": 5,
+      "toxicity_pct": 55.55555555555556
+    },
+    {
+      "decade": 1920,
+      "toxicity_rate": 0.5625,
+      "n_compounds": 16,
+      "n_toxic": 9,
+      "toxicity_pct": 56.25
+    },
+    {
+      "decade": 1930,
+      "toxicity_rate": 0.1,
+      "n_compounds": 10,
+      "n_toxic": 1,
+      "toxicity_pct": 10.0
+    },
+    {
+      "decade": 1940,
+      "toxicity_rate": 0.25925925925925924,
+      "n_compounds": 54,
+      "n_toxic": 14,
+      "toxicity_pct": 25.925925925925924
+    },
+    {
+      "decade": 1950,
+      "toxicity_rate": 0.3880597014925373,
+      "n_compounds": 67,
+      "n_toxic": 26,
+      "toxicity_pct": 38.80597014925373
+    },
+    {
+      "decade": 1960,
+      "toxicity_rate": 0.44166666666666665,
+      "n_compounds": 120,
+      "n_toxic": 53,
+      "toxicity_pct": 44.166666666666664
+    },
+    {
+      "decade": 1970,
+      "toxicity_rate": 0.32894736842105265,
+      "n_compounds": 152,
+      "n_toxic": 50,
+      "toxicity_pct": 32.89473684210527
+    },
+    {
+      "decade": 1980,
+      "toxicity_rate": 0.2857142857142857,
+      "n_compounds": 112,
+      "n_toxic": 32,
+      "toxicity_pct": 28.57142857142857
+    },
+    {
+      "decade": 1990,
+      "toxicity_rate": 0.18562874251497005,
+      "n_compounds": 167,
+      "n_toxic": 31,
+      "toxicity_pct": 18.562874251497004
+    },
+    {
+      "decade": 2000,
+      "toxicity_rate": 0.16279069767441862,
+      "n_compounds": 129,
+      "n_toxic": 21,
+      "toxicity_pct": 16.27906976744186
+    },
+    {
+      "decade": 2010,
+      "toxicity_rate": 0.2608695652173913,
+      "n_compounds": 69,
+      "n_toxic": 18,
+      "toxicity_pct": 26.08695652173913
+    },
+    {
+      "decade": 2020,
+      "toxicity_rate": 0.2,
+      "n_compounds": 15,
+      "n_toxic": 3,
+      "toxicity_pct": 20.0
+    }
+  ]
+}

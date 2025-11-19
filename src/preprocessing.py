@@ -16,7 +16,7 @@ Date: November 2025
 
 import pandas as pd
 import numpy as np
-from typing import Tuple, List, Optional
+from typing import Tuple, List, Optional, Dict
 from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.feature_selection import SelectKBest, f_classif, mutual_info_classif
@@ -66,7 +66,7 @@ class DataPreprocessor:
             Loaded dataframe
         """
         df = pd.read_csv(filepath)
-        print(f"✓ Data loaded: {df.shape}")
+        print(f"  Data loaded: {df.shape}")
         return df
     
     def prepare_features(
@@ -96,7 +96,7 @@ class DataPreprocessor:
         # Remove target and excluded columns
         X = df.drop([target_col] + exclude_cols, axis=1, errors='ignore')
         
-        print(f"✓ Features prepared: {X.shape}")
+        print(f"  Features prepared: {X.shape}")
         print(f"  - Target: {target_col}")
         print(f"  - Features: {list(X.columns)}")
         
@@ -126,7 +126,7 @@ class DataPreprocessor:
             categorical_cols = X.select_dtypes(include=['object']).columns.tolist()
         
         if not categorical_cols:
-            print("✓ No categorical features to encode")
+            print("  No categorical features to encode")
             return X
         
         print(f"\nEncoding categorical features: {categorical_cols}")
@@ -134,7 +134,7 @@ class DataPreprocessor:
         if method == 'onehot':
             # One-hot encoding
             X_encoded = pd.get_dummies(X, columns=categorical_cols, drop_first=True)
-            print(f"✓ One-hot encoding complete: {X.shape} → {X_encoded.shape}")
+            print(f"  One-hot encoding complete: {X.shape}   {X_encoded.shape}")
             return X_encoded
         
         elif method == 'label':
@@ -145,7 +145,7 @@ class DataPreprocessor:
                     X[col] = self.label_encoders[col].fit_transform(X[col])
                 else:
                     X[col] = self.label_encoders[col].transform(X[col])
-            print(f"✓ Label encoding complete")
+            print(f"  Label encoding complete")
             return X
         
         else:
@@ -168,10 +168,10 @@ class DataPreprocessor:
         """
         if fit:
             X_scaled = self.scaler.fit_transform(X)
-            print(f"✓ Features scaled (fitted)")
+            print(f"  Features scaled (fitted)")
         else:
             X_scaled = self.scaler.transform(X)
-            print(f"✓ Features scaled (transformed)")
+            print(f"  Features scaled (transformed)")
         
         # Convert back to dataframe
         X_scaled = pd.DataFrame(X_scaled, columns=X.columns, index=X.index)
@@ -200,7 +200,7 @@ class DataPreprocessor:
             Selected features
         """
         if k == 'all' or k >= X.shape[1]:
-            print("✓ Keeping all features")
+            print("  Keeping all features")
             return X
         
         if fit:
@@ -220,7 +220,7 @@ class DataPreprocessor:
             selected_mask = self.feature_selector.get_support()
             self.selected_features = X.columns[selected_mask].tolist()
             
-            print(f"✓ Feature selection ({method}): {X.shape[1]} → {k} features")
+            print(f"  Feature selection ({method}): {X.shape[1]}   {k} features")
             print(f"  Top features: {self.selected_features[:10]}")
             
         else:
@@ -258,7 +258,7 @@ class DataPreprocessor:
             Tuple of (resampled features, resampled target)
         """
         if method == 'none':
-            print("✓ No resampling applied")
+            print("  No resampling applied")
             return X, y
         
         print(f"\nHandling class imbalance using: {method}")
@@ -280,7 +280,7 @@ class DataPreprocessor:
         y_resampled = pd.Series(y_resampled, name=y.name)
         
         print(f"  After:  {y_resampled.value_counts().to_dict()}")
-        print(f"✓ Resampling complete: {len(y)} → {len(y_resampled)} samples")
+        print(f"  Resampling complete: {len(y)}   {len(y_resampled)} samples")
         
         return X_resampled, y_resampled
     
@@ -326,7 +326,7 @@ class DataPreprocessor:
             stratify=stratify_arg_val
         )
         
-        print(f"\n✓ Data split complete:")
+        print(f"\n  Data split complete:")
         print(f"  Train: {len(X_train)} samples ({len(X_train)/len(X)*100:.1f}%)")
         print(f"  Val:   {len(X_val)} samples ({len(X_val)/len(X)*100:.1f}%)")
         print(f"  Test:  {len(X_test)} samples ({len(X_test)/len(X)*100:.1f}%)")
@@ -338,28 +338,146 @@ class DataPreprocessor:
         
         return X_train, X_val, X_test, y_train, y_val, y_test
     
+    def scaffold_split(
+        self,
+        X: pd.DataFrame,
+        y: pd.Series,
+        smiles_col: str = 'SMILES',
+        test_size: float = 0.2,
+        val_size: float = 0.1
+    ) -> Dict:
+        """
+        Split data by molecular scaffolds for structural diversity testing.
+        
+        Ensures train/val/test sets contain different core structures to test
+        generalization to novel chemical scaffolds.
+        
+        Args:
+            X: Feature dataframe (must include SMILES column)
+            y: Target series
+            smiles_col: Name of SMILES column
+            test_size: Fraction for test set
+            val_size: Fraction for validation set
+            
+        Returns:
+            Dictionary with train/val/test splits and scaffold statistics
+        """
+        from rdkit import Chem
+        from rdkit.Chem.Scaffolds import MurckoScaffold
+        from collections import defaultdict
+        
+        print("\n  Performing scaffold-based split...")
+        
+        # Ensure SMILES column exists
+        if smiles_col not in X.columns:
+            raise ValueError(f"SMILES column '{smiles_col}' not found in dataframe")
+        
+        # Group molecules by scaffold
+        scaffold_to_indices = defaultdict(list)
+        invalid_smiles = []
+        
+        for idx, smiles in enumerate(X[smiles_col]):
+            try:
+                mol = Chem.MolFromSmiles(str(smiles))
+                if mol is None:
+                    scaffold = "INVALID"
+                    invalid_smiles.append(idx)
+                else:
+                    scaffold = MurckoScaffold.MurckoScaffoldSmiles(mol=mol, includeChirality=False)
+            except Exception as e:
+                scaffold = "INVALID"
+                invalid_smiles.append(idx)
+            
+            scaffold_to_indices[scaffold].append(idx)
+        
+        print(f"  - Unique scaffolds found: {len(scaffold_to_indices)}")
+        print(f"  - Invalid SMILES: {len(invalid_smiles)}")
+        
+        # Sort scaffolds by size (largest first) for better distribution
+        scaffolds = sorted(
+            scaffold_to_indices.items(),
+            key=lambda x: len(x[1]),
+            reverse=True
+        )
+        
+        # Calculate split sizes
+        n_total = len(X)
+        n_test = int(n_total * test_size)
+        n_val = int(n_total * val_size)
+        n_train = n_total - n_test - n_val
+        
+        # Assign scaffolds to splits
+        train_idx, val_idx, test_idx = [], [], []
+        
+        for scaffold, indices in scaffolds:
+            if len(train_idx) < n_train:
+                train_idx.extend(indices)
+            elif len(val_idx) < n_val:
+                val_idx.extend(indices)
+            else:
+                test_idx.extend(indices)
+        
+        # Count unique scaffolds per split
+        train_scaffolds = set()
+        val_scaffolds = set()
+        test_scaffolds = set()
+        
+        for scaffold, indices in scaffolds:
+            if any(idx in train_idx for idx in indices):
+                train_scaffolds.add(scaffold)
+            if any(idx in val_idx for idx in indices):
+                val_scaffolds.add(scaffold)
+            if any(idx in test_idx for idx in indices):
+                test_scaffolds.add(scaffold)
+        
+        # Create splits
+        splits = {
+            'X_train': X.iloc[train_idx].reset_index(drop=True),
+            'y_train': y.iloc[train_idx].reset_index(drop=True),
+            'X_val': X.iloc[val_idx].reset_index(drop=True),
+            'y_val': y.iloc[val_idx].reset_index(drop=True),
+            'X_test': X.iloc[test_idx].reset_index(drop=True),
+            'y_test': y.iloc[test_idx].reset_index(drop=True),
+            'split_type': 'scaffold',
+            'n_scaffolds_train': len(train_scaffolds),
+            'n_scaffolds_val': len(val_scaffolds),
+            'n_scaffolds_test': len(test_scaffolds),
+            'scaffold_overlap': {
+                'train_val': len(train_scaffolds & val_scaffolds),
+                'train_test': len(train_scaffolds & test_scaffolds),
+                'val_test': len(val_scaffolds & test_scaffolds)
+            }
+        }
+        
+        print(f"\n    Scaffold split created:")
+        print(f"    Train: {len(train_idx)} samples, {len(train_scaffolds)} scaffolds")
+        print(f"    Val:   {len(val_idx)} samples, {len(val_scaffolds)} scaffolds")
+        print(f"    Test:  {len(test_idx)} samples, {len(test_scaffolds)} scaffolds")
+        print(f"\n  Scaffold overlap:")
+        print(f"    Train-Val:  {splits['scaffold_overlap']['train_val']}")
+        print(f"    Train-Test: {splits['scaffold_overlap']['train_test']}")
+        print(f"    Val-Test:   {splits['scaffold_overlap']['val_test']}")
+        
+        return splits
+    
     def save_preprocessor(self, filepath: str):
         """
-        Save preprocessor objects for later use.
+        Save preprocessor instance for later use.
         
         Args:
             filepath: Path to save preprocessor
         """
-        preprocessor_dict = {
-            'scaler': self.scaler,
-            'label_encoders': self.label_encoders,
-            'feature_selector': self.feature_selector,
-            'selected_features': self.selected_features,
-            'random_state': self.random_state
-        }
+        import os
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
         
-        joblib.dump(preprocessor_dict, filepath)
-        print(f"✓ Preprocessor saved: {filepath}")
+        # Save the entire DataPreprocessor instance (not dict)
+        joblib.dump(self, filepath)
+        print(f"  Preprocessor saved: {filepath}")
     
     @classmethod
     def load_preprocessor(cls, filepath: str) -> 'DataPreprocessor':
         """
-        Load saved preprocessor objects.
+        Load saved preprocessor instance.
         
         Args:
             filepath: Path to saved preprocessor
@@ -367,15 +485,13 @@ class DataPreprocessor:
         Returns:
             Loaded DataPreprocessor instance
         """
-        preprocessor_dict = joblib.load(filepath)
+        preprocessor = joblib.load(filepath)
         
-        preprocessor = cls(random_state=preprocessor_dict['random_state'])
-        preprocessor.scaler = preprocessor_dict['scaler']
-        preprocessor.label_encoders = preprocessor_dict['label_encoders']
-        preprocessor.feature_selector = preprocessor_dict['feature_selector']
-        preprocessor.selected_features = preprocessor_dict['selected_features']
+        # Verify it's a DataPreprocessor instance
+        if not isinstance(preprocessor, cls):
+            raise TypeError(f"Loaded object is not a DataPreprocessor instance, got {type(preprocessor)}")
         
-        print(f"✓ Preprocessor loaded: {filepath}")
+        print(f"  Preprocessor loaded: {filepath}")
         return preprocessor
 
 
@@ -473,5 +589,5 @@ if __name__ == "__main__":
         imbalance_method='smote'
     )
     
-    print("\n✓ Preprocessing pipeline executed successfully!")
+    print("\n  Preprocessing pipeline executed successfully!")
 
