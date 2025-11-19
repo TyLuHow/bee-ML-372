@@ -16,13 +16,36 @@ This project implements an end-to-end machine learning pipeline to predict wheth
 
 ### Key Features
 
+#### Machine Learning & Prediction
 - ✅ **Multiple ML Models**: Logistic Regression, Random Forest, XGBoost, LightGBM
 - ✅ **Model Interpretability**: SHAP and LIME explanations
-- ✅ **REST API**: FastAPI backend for production deployment
-- ✅ **Comprehensive EDA**: Statistical analysis and visualizations
-- ✅ **Feature Engineering**: Molecular descriptors from SMILES
+- ✅ **SMILES Support**: Direct prediction from molecular structures
+- ✅ **Feature Engineering**: 15 molecular descriptors from SMILES
 - ✅ **Class Imbalance Handling**: SMOTE resampling
-- ✅ **Academic Documentation**: Proposal, presentation, and technical reports
+
+#### Data Explorer (NEW)
+- ✅ **Dataset Overview**: Comprehensive statistics and distributions
+- ✅ **Molecular Diversity**: Descriptor distributions with toxicity overlay
+- ✅ **Toxicity Analysis**: By chemical class with statistical tests
+- ✅ **Temporal Trends**: Historical toxicity patterns with Mann-Kendall test
+- ✅ **Chemical Space**: PCA and t-SNE visualizations
+- ✅ **Toxicophores**: Structural alert enrichment analysis
+- ✅ **Feature Correlations**: Interactive correlation matrix
+- ✅ **Property Relationships**: 2D scatter plots
+
+#### Web Application (NEW)
+- ✅ **Modern Dashboard**: Overview with quick actions
+- ✅ **Interactive Explorer**: 7 tabs for comprehensive data analysis
+- ✅ **Enhanced Prediction**: SMILES input with real-time validation
+- ✅ **Visual Results**: Confidence gauges and toxicity indicators
+- ✅ **Responsive Design**: Optimized for desktop and mobile
+- ✅ **Performance**: Code splitting and caching for fast load times
+
+#### Backend Infrastructure
+- ✅ **REST API**: FastAPI with automatic OpenAPI documentation
+- ✅ **Caching System**: In-memory caching for expensive computations
+- ✅ **Optimized**: Reduced code duplication with utility modules
+- ✅ **Production Ready**: Error handling and validation
 
 ---
 
@@ -84,62 +107,72 @@ apis_tox_dataset/
 
 ### Prerequisites
 
-- Python 3.8+
-- pip or conda
-- 4GB RAM minimum
-- Internet connection (for package installation)
+- **Backend**: Python 3.8+
+- **Frontend**: Node.js 16+ and npm
+- **RAM**: 4GB minimum
+- **Storage**: 500MB for dependencies
 
 ### Installation
 
-1. **Clone the repository**:
+#### 1. Clone the Repository
 ```bash
 git clone <repository-url>
-cd apis_tox_dataset
+cd bee-ML-372
 ```
 
-2. **Install dependencies**:
+#### 2. Backend Setup
 ```bash
+# Install Python dependencies
 pip install -r requirements.txt
 ```
 
-Or using the existing poetry/requirements:
+#### 3. Frontend Setup
 ```bash
-poetry install --no-root
-# OR
-pip install -r requirements.txt
-```
+# Navigate to frontend directory
+cd app/frontend
 
-3. **Install additional ML packages**:
-```bash
-pip install seaborn shap lime lightgbm imbalanced-learn rdkit
+# Install Node dependencies
+npm install
+
+# Return to root
+cd ../..
 ```
 
 ### Quick Start
 
-1. **Run Exploratory Data Analysis**:
+#### Option 1: Run Full Application
+
+**Terminal 1 - Backend**:
 ```bash
-python run_eda.py
+cd /home/user/bee-ML-372
+python -m uvicorn app.backend.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-2. **Train Models**:
+**Terminal 2 - Frontend**:
 ```bash
-python train_models_fast.py
+cd app/frontend
+npm run dev
 ```
 
-3. **Generate Interpretability Analysis**:
-```bash
-python src/interpretability.py
-```
+The application will be available at:
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
 
-4. **Start API Server**:
+#### Option 2: API Only
+
 ```bash
 python app/backend/main.py
 ```
 
-The API will be available at `http://localhost:8000`
+Visit http://localhost:8000/docs for interactive API documentation.
 
-5. **View API Documentation**:
-Open browser: `http://localhost:8000/docs`
+### First Steps
+
+1. **Explore the Dataset**: Navigate to the Explorer tab to analyze the dataset
+2. **Make Predictions**: Go to Predict tab and enter a SMILES string or molecular descriptors
+3. **View Model Info**: Check the Model tab for performance metrics
+4. **API Integration**: Use the /docs endpoint to test API calls
 
 ---
 
@@ -193,12 +226,14 @@ Open browser: `http://localhost:8000/docs`
 
 ## 🔌 API Endpoints
 
-### Health Check
+### Core Endpoints
+
+#### Health Check
 ```bash
 GET /health
 ```
 
-### Make Prediction
+#### Make Prediction (Descriptors)
 ```bash
 POST /predict
 Content-Type: application/json
@@ -214,20 +249,78 @@ Content-Type: application/json
 }
 ```
 
-### Get Model Information
+#### Make Prediction (SMILES)
+```bash
+POST /predict/smiles
+Content-Type: application/json
+
+{
+  "smiles": "CC(=O)Oc1ccccc1C(=O)O",
+  "year": 2024,
+  "insecticide": 1,
+  "source": "PPDB",
+  "toxicity_type": "Contact"
+}
+```
+
+#### Model Information
 ```bash
 GET /model/info
 ```
 
-### Feature Importance
+#### Feature Importance
 ```bash
 GET /feature/importance
 ```
 
-### Prediction History
+#### Prediction History
 ```bash
 GET /history?limit=10
 ```
+
+### Data Explorer Endpoints
+
+#### Dataset Overview
+```bash
+GET /api/explorer/overview
+```
+
+#### Molecular Diversity
+```bash
+GET /api/explorer/molecular-diversity
+```
+
+#### Toxicity by Class
+```bash
+GET /api/explorer/toxicity-by-class
+```
+
+#### Temporal Trends
+```bash
+GET /api/explorer/temporal-trends
+```
+
+#### Chemical Space (PCA/t-SNE)
+```bash
+GET /api/explorer/chemical-space
+```
+
+#### Toxicophores
+```bash
+GET /api/explorer/toxicophores
+```
+
+#### Feature Correlations
+```bash
+GET /api/explorer/correlations
+```
+
+#### Property Distributions
+```bash
+GET /api/explorer/property-distributions
+```
+
+See full API documentation at `/docs` endpoint.
 
 ---
 
@@ -360,15 +453,26 @@ For questions or issues:
 
 ---
 
-## 📈 Future Enhancements
+## 📈 Completed Enhancements (v2.0.0)
 
-- [ ] **Frontend**: React/TypeScript web application
+- ✅ **Frontend**: React/TypeScript web application with Tailwind CSS
+- ✅ **Data Explorer**: 8 comprehensive endpoints for dataset analysis
+- ✅ **Advanced Visualizations**: Interactive charts with Recharts
+- ✅ **Code Splitting**: Lazy loading for optimized bundle size
+- ✅ **Caching System**: In-memory caching for performance
+- ✅ **SMILES Support**: Direct molecular structure input
+- ✅ **Responsive Design**: Mobile and desktop optimized
+- ✅ **Production Ready**: Error handling, validation, and optimization
+
+## 🚧 Future Enhancements
+
 - [ ] **Database**: PostgreSQL for production storage
 - [ ] **Monitoring**: MLflow for experiment tracking
-- [ ] **Deployment**: Docker containerization
-- [ ] **CI/CD**: Automated testing and deployment
-- [ ] **Additional Models**: Deep learning (Graph Neural Networks)
-- [ ] **Real-time API**: Streaming predictions
+- [ ] **Docker**: Full containerization with docker-compose
+- [ ] **CI/CD**: Automated testing and deployment pipeline
+- [ ] **Deep Learning**: Graph Neural Networks for molecular prediction
+- [ ] **User Authentication**: Secure user accounts and sessions
+- [ ] **Batch Predictions**: Upload CSV for bulk processing
 - [ ] **Mobile App**: iOS/Android applications
 
 ---

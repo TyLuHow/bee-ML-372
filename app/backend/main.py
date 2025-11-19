@@ -5,9 +5,10 @@ FastAPI Backend for Honey Bee Toxicity Prediction
 
 REST API for serving ML model predictions with:
 - Prediction endpoint with toxicity classification
-- SHAP explanation endpoint  
+- SHAP explanation endpoint
 - Model information endpoint
 - Prediction history tracking
+- Data explorer endpoints
 - CORS support for frontend
 
 Author: IME 372 Project Team
@@ -17,13 +18,14 @@ Date: November 2025
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from typing import List, Optional, Dict
-import joblib
-import numpy as np
+from typing import List, Dict
 import pandas as pd
 from datetime import datetime
-import json
 import os
+
+# Import explorer router and utilities
+from app.backend import explorer
+from app.backend.utils import load_model, load_json, save_json, format_error, validate_input_features, truncate_history
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -41,6 +43,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include explorer router
+app.include_router(explorer.router, prefix="/api/explorer", tags=["explorer"])
+
 # Load model and preprocessor at startup
 MODEL_PATH = "outputs/models/best_model_xgboost.pkl"
 PREPROCESSOR_PATH = "outputs/preprocessors/preprocessor.pkl"
@@ -53,28 +58,25 @@ model_info = {}
 prediction_history = []
 
 @app.on_event("startup")
-async def load_model():
+async def load_models():
     """Load model and preprocessor on startup."""
     global model, preprocessor, model_info, prediction_history
-    
+
     try:
-        # Load model
-        model = joblib.load(MODEL_PATH)
-        print(f"✓ Model loaded from {MODEL_PATH}")
-        
+        # Load model using utility function
+        model = load_model(MODEL_PATH, "XGBoost Model")
+
         # Fix pickle module path issue (preprocessing -> src.preprocessing)
         import sys
         import src.preprocessing as preprocessing_module
         sys.modules['preprocessing'] = preprocessing_module
-        
-        # Load preprocessor (as DataPreprocessor instance)
-        preprocessor = joblib.load(PREPROCESSOR_PATH)
-        
+
+        # Load preprocessor
+        preprocessor = load_model(PREPROCESSOR_PATH, "Preprocessor")
+
         # Verify preprocessor has required attributes
         if not hasattr(preprocessor, 'scaler'):
             print("⚠️ Warning: Preprocessor missing 'scaler' attribute")
-            print(f"   Preprocessor type: {type(preprocessor)}")
-            print(f"   Attributes: {dir(preprocessor)}")
             # Try to handle dict format for backward compatibility
             if isinstance(preprocessor, dict):
                 print("   Detected dict format, attempting conversion...")
@@ -86,22 +88,17 @@ async def load_model():
                 new_preprocessor.selected_features = preprocessor.get('selected_features')
                 preprocessor = new_preprocessor
                 print("   ✓ Converted dict to DataPreprocessor instance")
-        
-        print(f"✓ Preprocessor loaded from {PREPROCESSOR_PATH}")
-        
+
         # Load model info
         if os.path.exists(RESULTS_PATH):
-            with open(RESULTS_PATH, 'r') as f:
-                results = json.load(f)
-                model_info = results.get('xgboost', {})
-        
+            model_info = load_json(RESULTS_PATH, "Model metrics").get('xgboost', {})
+
         # Load prediction history
         if os.path.exists(HISTORY_FILE):
-            with open(HISTORY_FILE, 'r') as f:
-                prediction_history = json.load(f)
-        
+            prediction_history = load_json(HISTORY_FILE, "Prediction history")
+
         print("✓ API Ready!")
-        
+
     except Exception as e:
         print(f"Error loading model: {e}")
         import traceback
@@ -224,6 +221,16 @@ async def root():
             "/analysis/toxicophores": "Get toxicophore analysis",
             "/recommend/alternatives/{cid}": "Get safer alternatives",
             "/health": "Health check"
+        },
+        "explorer_endpoints": {
+            "/api/explorer/overview": "Dataset overview statistics",
+            "/api/explorer/molecular-diversity": "Molecular descriptor distributions",
+            "/api/explorer/toxicity-by-class": "Toxicity rates by chemical type",
+            "/api/explorer/temporal-trends": "Toxicity trends over time",
+            "/api/explorer/chemical-space": "PCA and t-SNE coordinates",
+            "/api/explorer/toxicophores": "Toxicophore enrichment data",
+            "/api/explorer/correlations": "Feature correlation matrix",
+            "/api/explorer/property-distributions": "2D property relationships"
         }
     }
 
@@ -257,26 +264,22 @@ async def predict(input_data: PredictionInput):
         # Convert input to dataframe
         input_dict = input_data.dict()
         input_df = pd.DataFrame([input_dict])
-        
+
         # Encode categorical features (matching training preprocessing)
         input_df = pd.get_dummies(input_df, columns=['source', 'toxicity_type'], drop_first=True)
-        
-        # Ensure all expected columns are present (add missing with 0s)
+
+        # Expected feature columns
         expected_cols = [
             'year', 'herbicide', 'fungicide', 'insecticide', 'other_agrochemical',
-            'MolecularWeight', 'LogP', 'NumHDonors', 'NumHAcceptors', 
+            'MolecularWeight', 'LogP', 'NumHDonors', 'NumHAcceptors',
             'NumRotatableBonds', 'NumAromaticRings', 'TPSA', 'NumHeteroatoms',
             'NumRings', 'NumSaturatedRings', 'NumAliphaticRings', 'FractionCSP3',
             'MolarRefractivity', 'BertzCT', 'HeavyAtomCount',
             'source_ECOTOX', 'source_PPDB', 'toxicity_type_Oral', 'toxicity_type_Other'
         ]
-        
-        for col in expected_cols:
-            if col not in input_df.columns:
-                input_df[col] = 0
-        
-        # Reorder columns to match training
-        input_df = input_df[expected_cols]
+
+        # Validate and align features using utility function
+        input_df = validate_input_features(input_df, expected_cols, add_missing=True)
         
         # Scale features
         input_scaled = preprocessor.scaler.transform(input_df)
@@ -298,23 +301,14 @@ async def predict(input_data: PredictionInput):
         }
         
         # Save to history
-        history_entry = {
-            **input_dict,
-            **response
-        }
+        history_entry = {**input_dict, **response}
         prediction_history.append(history_entry)
-        
-        # Keep only last 100 predictions
-        if len(prediction_history) > 100:
-            prediction_history.pop(0)
-        
+
+        # Truncate history using utility function
+        prediction_history[:] = truncate_history(prediction_history, max_length=100)
+
         # Save history to file
-        try:
-            os.makedirs(os.path.dirname(HISTORY_FILE), exist_ok=True)
-            with open(HISTORY_FILE, 'w') as f:
-                json.dump(prediction_history, f, indent=2)
-        except Exception as e:
-            print(f"Warning: Could not save history: {e}")
+        save_json(prediction_history, HISTORY_FILE, "Prediction history")
         
         return response
         

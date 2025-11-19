@@ -1,86 +1,71 @@
-import { useState } from 'react'
-import PredictionForm from './components/PredictionForm'
-import ResultDisplay from './components/ResultDisplay'
-import ModelInfo from './components/ModelInfo'
+import { useState, useEffect, lazy, Suspense } from 'react'
+import { Layout } from './components/layout/Layout'
+import { AppProvider } from './store/AppContext'
 import './App.css'
 
-interface PredictionResult {
-  prediction: number
-  label_text: string
-  probability_toxic: number
-  probability_non_toxic: number
-  confidence: number
-  timestamp: string
-}
+// Code splitting: Lazy load pages to reduce initial bundle size
+const Dashboard = lazy(() => import('./pages/Dashboard').then(m => ({ default: m.Dashboard })))
+const ExplorerPage = lazy(() => import('./pages/ExplorerPage').then(m => ({ default: m.ExplorerPage })))
+const PredictPage = lazy(() => import('./pages/PredictPage').then(m => ({ default: m.PredictPage })))
+const ModelPage = lazy(() => import('./pages/ModelPage').then(m => ({ default: m.ModelPage })))
+const DocsPage = lazy(() => import('./pages/DocsPage').then(m => ({ default: m.DocsPage })))
 
 function App() {
-  const [result, setResult] = useState<PredictionResult | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [currentPath, setCurrentPath] = useState('/')
 
-  const handlePrediction = (predictionResult: PredictionResult) => {
-    setResult(predictionResult)
-    setError(null)
+  // Simple hash-based router
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.slice(1) || '/'
+      setCurrentPath(hash)
+    }
+
+    // Set initial path
+    handleHashChange()
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashChange)
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange)
+    }
+  }, [])
+
+  const navigate = (path: string) => {
+    window.location.hash = path
   }
 
-  const handleError = (errorMessage: string) => {
-    setError(errorMessage)
-    setResult(null)
-  }
-
-  const handleLoading = (isLoading: boolean) => {
-    setLoading(isLoading)
+  // Render the appropriate page component based on current path
+  const renderPage = () => {
+    switch (currentPath) {
+      case '/':
+        return <Dashboard />
+      case '/explorer':
+        return <ExplorerPage />
+      case '/predict':
+        return <PredictPage />
+      case '/model':
+        return <ModelPage />
+      case '/docs':
+        return <DocsPage />
+      default:
+        return <Dashboard />
+    }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 py-8 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <header className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-white mb-2 flex items-center justify-center gap-3">
-            🐝 Honey Bee Toxicity Predictor
-          </h1>
-          <p className="text-xl text-white/90">
-            ML-Powered Pesticide Safety Assessment
-          </p>
-          <p className="text-sm text-white/70 mt-2">
-            IME 372 Course Project | 83.6% Accuracy | XGBoost Classifier
-          </p>
-        </header>
-
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Prediction Form */}
-          <div className="lg:col-span-2">
-            <PredictionForm
-              onPrediction={handlePrediction}
-              onError={handleError}
-              onLoading={handleLoading}
-            />
+    <AppProvider>
+      <Layout currentPath={currentPath} onNavigate={navigate}>
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
           </div>
-
-          {/* Right Column - Results & Info */}
-          <div className="space-y-6">
-            <ResultDisplay
-              result={result}
-              loading={loading}
-              error={error}
-            />
-            <ModelInfo />
-          </div>
-        </div>
-
-        {/* Footer */}
-        <footer className="mt-8 text-center text-white/70 text-sm">
-          <p>Built with ❤️ for pollinator conservation</p>
-          <p className="mt-1">
-            Data: ApisTox Dataset (1,035 compounds) | Model: XGBoost | Interpretability: SHAP
-          </p>
-        </footer>
-      </div>
-    </div>
+        }>
+          {renderPage()}
+        </Suspense>
+      </Layout>
+    </AppProvider>
   )
 }
 
 export default App
-
