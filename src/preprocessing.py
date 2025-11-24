@@ -284,6 +284,47 @@ class DataPreprocessor:
         
         return X_resampled, y_resampled
     
+    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
+        """
+        Transform new data using the fitted preprocessor.
+        
+        Args:
+            X: Input dataframe
+            
+        Returns:
+            Preprocessed features dataframe
+        """
+        # 1. Prepare features (drop excluded)
+        exclude_cols = ['name', 'CID', 'CAS', 'SMILES', 'ppdb_level', 'label']
+        X_clean = X.drop([c for c in exclude_cols if c in X.columns], axis=1, errors='ignore')
+        
+        # 2. Categorical encoding
+        # Note: This uses get_dummies which might not match training columns if categories differ.
+        # For production, a robust OneHotEncoder with fixed categories should be used.
+        X_encoded = self.encode_categorical_features(X_clean, method='onehot')
+        
+        # Align columns with scaler if possible (or ensure common columns are present)
+        # This is a best-effort implementation
+        if hasattr(self.scaler, 'feature_names_in_'):
+             # Add missing columns with 0
+            missing_cols = set(self.scaler.feature_names_in_) - set(X_encoded.columns)
+            for c in missing_cols:
+                X_encoded[c] = 0
+            
+            # Reorder/Filter columns
+            X_encoded = X_encoded[self.scaler.feature_names_in_]
+        
+        # 3. Scale
+        X_scaled = self.scale_features(X_encoded, fit=False)
+        
+        # 4. Select features
+        if self.feature_selector:
+            X_final = self.select_features(X_scaled, None, fit=False)
+        else:
+            X_final = X_scaled
+            
+        return X_final
+    
     def split_data(
         self,
         X: pd.DataFrame,

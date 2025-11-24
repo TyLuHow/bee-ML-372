@@ -60,7 +60,7 @@ async def load_model():
     try:
         # Load model
         model = joblib.load(MODEL_PATH)
-        print(f"✓ Model loaded from {MODEL_PATH}")
+        print(f"[OK] Model loaded from {MODEL_PATH}")
         
         # Fix pickle module path issue (preprocessing -> src.preprocessing)
         import sys
@@ -72,7 +72,7 @@ async def load_model():
         
         # Verify preprocessor has required attributes
         if not hasattr(preprocessor, 'scaler'):
-            print("⚠️ Warning: Preprocessor missing 'scaler' attribute")
+            print("[WARN] Warning: Preprocessor missing 'scaler' attribute")
             print(f"   Preprocessor type: {type(preprocessor)}")
             print(f"   Attributes: {dir(preprocessor)}")
             # Try to handle dict format for backward compatibility
@@ -85,9 +85,9 @@ async def load_model():
                 new_preprocessor.feature_selector = preprocessor.get('feature_selector')
                 new_preprocessor.selected_features = preprocessor.get('selected_features')
                 preprocessor = new_preprocessor
-                print("   ✓ Converted dict to DataPreprocessor instance")
+                print("   [OK] Converted dict to DataPreprocessor instance")
         
-        print(f"✓ Preprocessor loaded from {PREPROCESSOR_PATH}")
+        print(f"[OK] Preprocessor loaded from {PREPROCESSOR_PATH}")
         
         # Load model info
         if os.path.exists(RESULTS_PATH):
@@ -100,7 +100,7 @@ async def load_model():
             with open(HISTORY_FILE, 'r') as f:
                 prediction_history = json.load(f)
         
-        print("✓ API Ready!")
+        print("[OK] API Ready!")
         
     except Exception as e:
         print(f"Error loading model: {e}")
@@ -122,7 +122,7 @@ class PredictionInputSMILES(BaseModel):
     toxicity_type: str = Field("Contact", description="Toxicity type (Contact or Oral)")
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "smiles": "CC(=O)Oc1ccccc1C(=O)O",
                 "year": 2024,
@@ -162,7 +162,7 @@ class PredictionInput(BaseModel):
     HeavyAtomCount: int = Field(..., description="Number of heavy atoms", ge=0)
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "source": "PPDB",
                 "year": 2020,

@@ -29,7 +29,7 @@ def run_all_analyses():
         from src.temporal_analysis import run_temporal_analysis
         from src.chemical_space import run_chemical_space_analysis
     except ImportError as e:
-        print(f"X Import error: {e}")
+        print(f"[FAIL] Import error: {e}")
         print("  Make sure all dependencies are installed.")
         return False
     
@@ -39,9 +39,9 @@ def run_all_analyses():
     print("="*80)
     try:
         temporal_results = run_temporal_analysis()
-        print("OK Temporal analysis complete")
+        print("[OK] Temporal analysis complete")
     except Exception as e:
-        print(f"X Temporal analysis failed: {e}")
+        print(f"[FAIL] Temporal analysis failed: {e}")
         import traceback
         traceback.print_exc()
         temporal_results = None
@@ -52,9 +52,9 @@ def run_all_analyses():
     print("="*80)
     try:
         chemical_space_results = run_chemical_space_analysis()
-        print("OK Chemical space analysis complete")
+        print("[OK] Chemical space analysis complete")
     except Exception as e:
-        print(f"X Chemical space analysis failed: {e}")
+        print(f"[FAIL] Chemical space analysis failed: {e}")
         import traceback
         traceback.print_exc()
         chemical_space_results = None
@@ -69,7 +69,7 @@ def run_all_analyses():
         chemical_space_results is not None
     ])
     
-    print(f"\nOK {success_count}/2 analyses completed successfully")
+    print(f"\n[OK] {success_count}/2 analyses completed successfully")
     print(f"Finished: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
     print("\nGenerated outputs:")
@@ -94,6 +94,7 @@ def run_all_analyses():
 if __name__ == "__main__":
     success = run_all_analyses()
     sys.exit(0 if success else 1)
+
 
 
 

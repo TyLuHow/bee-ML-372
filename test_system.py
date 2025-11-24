@@ -37,29 +37,34 @@ def test_model_files():
     print(f"Preprocessor file exists: {prep_exists}")
     
     if not model_exists:
-        print("❌ Model file not found!")
+        print("[FAIL] Model file not found!")
         return False
     
     if not prep_exists:
-        print("❌ Preprocessor file not found!")
+        print("[FAIL] Preprocessor file not found!")
         return False
     
     # Try loading
     try:
         model = joblib.load(model_path)
-        print(f"✓ Model loaded successfully: {type(model).__name__}")
+        print(f"[OK] Model loaded successfully: {type(model).__name__}")
     except Exception as e:
-        print(f"❌ Error loading model: {e}")
+        print(f"[FAIL] Error loading model: {e}")
         return False
     
     try:
+        # Fix pickle module path issue (preprocessing -> src.preprocessing)
+        import sys
+        import src.preprocessing as preprocessing_module
+        sys.modules['preprocessing'] = preprocessing_module
+        
         prep = joblib.load(prep_path)
-        print(f"✓ Preprocessor loaded successfully: {type(prep).__name__}")
+        print(f"[OK] Preprocessor loaded successfully: {type(prep).__name__}")
     except Exception as e:
-        print(f"❌ Error loading preprocessor: {e}")
+        print(f"[FAIL] Error loading preprocessor: {e}")
         return False
     
-    print("✅ Test 1 PASSED\n")
+    print("[PASS] Test 1 PASSED\n")
     return True
 
 
@@ -72,7 +77,7 @@ def test_data_loading():
     dataset_path = "outputs/dataset_final.csv"
     
     if not os.path.exists(dataset_path):
-        print(f"❌ Dataset not found: {dataset_path}")
+        print(f"[FAIL] Dataset not found: {dataset_path}")
         return False
     
     try:
@@ -80,10 +85,10 @@ def test_data_loading():
         print(f"Dataset loaded: {df.shape[0]} rows × {df.shape[1]} columns")
         print(f"Columns: {list(df.columns)}")
         print(f"Target distribution:\n{df['label'].value_counts()}")
-        print("✅ Test 2 PASSED\n")
+        print("[PASS] Test 2 PASSED\n")
         return True
     except Exception as e:
-        print(f"❌ Error loading dataset: {e}")
+        print(f"[FAIL] Error loading dataset: {e}")
         return False
 
 
@@ -94,6 +99,11 @@ def test_prediction_pipeline():
     print("=" * 80)
     
     try:
+        # Fix pickle module path issue (preprocessing -> src.preprocessing)
+        import sys
+        import src.preprocessing as preprocessing_module
+        sys.modules['preprocessing'] = preprocessing_module
+
         # Load model and preprocessor
         model = joblib.load("outputs/models/best_model_xgboost.pkl")
         preprocessor = joblib.load("outputs/preprocessors/preprocessor.pkl")
@@ -139,11 +149,11 @@ def test_prediction_pipeline():
         print(f"Probability [Non-Toxic, Toxic]: {probability[0]}")
         print(f"Confidence: {max(probability[0]):.2%}")
         
-        print("✅ Test 3 PASSED\n")
+        print("[PASS] Test 3 PASSED\n")
         return True
         
     except Exception as e:
-        print(f"❌ Error in prediction pipeline: {e}")
+        print(f"[FAIL] Error in prediction pipeline: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -159,13 +169,13 @@ def test_api_imports():
         from fastapi import FastAPI
         from fastapi.testclient import TestClient
         from pydantic import BaseModel
-        print("✓ FastAPI imported")
-        print("✓ TestClient imported")
-        print("✓ Pydantic imported")
-        print("✅ Test 4 PASSED\n")
+        print("[OK] FastAPI imported")
+        print("[OK] TestClient imported")
+        print("[OK] Pydantic imported")
+        print("[PASS] Test 4 PASSED\n")
         return True
     except ImportError as e:
-        print(f"❌ Missing API dependency: {e}")
+        print(f"[FAIL] Missing API dependency: {e}")
         print("Install with: pip install fastapi pydantic python-multipart")
         return False
 
@@ -178,13 +188,13 @@ def test_visualization_libraries():
     
     try:
         import matplotlib
-        print(f"✓ matplotlib {matplotlib.__version__}")
+        print(f"[OK] matplotlib {matplotlib.__version__}")
         import seaborn
-        print(f"✓ seaborn {seaborn.__version__}")
-        print("✅ Test 5 PASSED\n")
+        print(f"[OK] seaborn {seaborn.__version__}")
+        print("[PASS] Test 5 PASSED\n")
         return True
     except ImportError as e:
-        print(f"⚠️ Visualization library missing: {e}")
+        print(f"[WARN] Visualization library missing: {e}")
         print("Install with: pip install matplotlib seaborn")
         return False
 
@@ -200,23 +210,23 @@ def test_interpretability_libraries():
     
     try:
         import shap
-        print(f"✓ SHAP {shap.__version__}")
+        print(f"[OK] SHAP {shap.__version__}")
         has_shap = True
     except ImportError:
-        print("⚠️ SHAP not installed (pip install shap)")
+        print("[WARN] SHAP not installed (pip install shap)")
     
     try:
         import lime
-        print(f"✓ LIME")
+        print(f"[OK] LIME")
         has_lime = True
     except ImportError:
-        print("⚠️ LIME not installed (pip install lime)")
+        print("[WARN] LIME not installed (pip install lime)")
     
     if has_shap or has_lime:
-        print("✅ Test 6 PASSED (partial)\n")
+        print("[PASS] Test 6 PASSED (partial)\n")
         return True
     else:
-        print("❌ Test 6 FAILED - No interpretability libraries\n")
+        print("[FAIL] Test 6 FAILED - No interpretability libraries\n")
         return False
 
 
@@ -260,27 +270,27 @@ def test_file_structure():
     print(f"Files present: {len(present)}/{len(required_files)}")
     
     if missing:
-        print(f"\n⚠️ Missing files ({len(missing)}):")
+        print(f"\n[WARN] Missing files ({len(missing)}):")
         for f in missing[:5]:  # Show first 5
             print(f"  - {f}")
         if len(missing) > 5:
             print(f"  ... and {len(missing) - 5} more")
     
     if len(present) >= len(required_files) * 0.8:  # 80% threshold
-        print("✅ Test 7 PASSED (most files present)\n")
+        print("[PASS] Test 7 PASSED (most files present)\n")
         return True
     else:
-        print("❌ Test 7 FAILED (too many missing files)\n")
+        print("[FAIL] Test 7 FAILED (too many missing files)\n")
         return False
 
 
 def main():
     """Run all tests."""
     print("\n")
-    print("╔" + "=" * 78 + "╗")
-    print("║" + " " * 20 + "SYSTEM INTEGRATION TEST" + " " * 35 + "║")
-    print("║" + " " * 15 + "Honey Bee Toxicity Prediction System" + " " * 27 + "║")
-    print("╚" + "=" * 78 + "╝")
+    print("*" + "=" * 78 + "*")
+    print("|" + " " * 20 + "SYSTEM INTEGRATION TEST" + " " * 35 + "|")
+    print("|" + " " * 15 + "Honey Bee Toxicity Prediction System" + " " * 27 + "|")
+    print("*" + "=" * 78 + "*")
     print("\n")
     
     tests = [
@@ -299,7 +309,7 @@ def main():
             result = test_func()
             results.append((test_name, result))
         except Exception as e:
-            print(f"❌ Test '{test_name}' crashed: {e}")
+            print(f"[FAIL] Test '{test_name}' crashed: {e}")
             results.append((test_name, False))
     
     # Summary
@@ -312,20 +322,20 @@ def main():
     total = len(results)
     
     for test_name, result in results:
-        status = "✅ PASS" if result else "❌ FAIL"
+        status = "[PASS]" if result else "[FAIL]"
         print(f"{status:8} | {test_name}")
     
     print("-" * 80)
     print(f"Total: {passed}/{total} tests passed ({passed/total*100:.1f}%)")
     
     if passed == total:
-        print("\n🎉 ALL TESTS PASSED! System is ready for deployment.")
+        print("\n[SUCCESS] ALL TESTS PASSED! System is ready for deployment.")
         return 0
     elif passed >= total * 0.7:
-        print("\n⚠️ Most tests passed. System is mostly functional.")
+        print("\n[WARN] Most tests passed. System is mostly functional.")
         return 1
     else:
-        print("\n❌ Multiple tests failed. Review errors above.")
+        print("\n[FAIL] Multiple tests failed. Review errors above.")
         return 2
 
 

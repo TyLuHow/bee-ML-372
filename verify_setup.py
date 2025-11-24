@@ -14,9 +14,9 @@ from pathlib import Path
 def check_python_version():
     """Check Python version."""
     version = sys.version_info
-    print(f"✓ Python {version.major}.{version.minor}.{version.micro}")
+    print(f"[OK] Python {version.major}.{version.minor}.{version.micro}")
     if version.major < 3 or (version.major == 3 and version.minor < 9):
-        print("  ⚠️  Warning: Python 3.9+ recommended")
+        print("  - Warning: Python 3.9+ recommended")
         return False
     return True
 
@@ -30,11 +30,15 @@ def check_dependencies():
     
     missing = []
     for package in required:
+        pkg_name = package
+        if package == 'scikit-learn':
+            pkg_name = 'sklearn'
+        
         try:
-            __import__(package.replace('-', '_'))
-            print(f"  ✓ {package}")
+            __import__(pkg_name.replace('-', '_'))
+            print(f"  [OK] {package}")
         except ImportError:
-            print(f"  ✗ {package} - MISSING")
+            print(f"  [FAIL] {package} - MISSING")
             missing.append(package)
     
     return len(missing) == 0, missing
@@ -62,89 +66,90 @@ def check_file_structure():
     
     all_ok = True
     
-    print("\n📁 Checking file structure...")
+    print("\n[FILES] Checking file structure...")
     for fpath in required_files:
         if Path(fpath).exists():
-            print(f"  ✓ {fpath}")
+            print(f"  [OK] {fpath}")
         else:
-            print(f"  ✗ {fpath} - MISSING")
+            print(f"  [FAIL] {fpath} - MISSING")
             all_ok = False
     
     for dpath in required_dirs:
         if Path(dpath).exists():
-            print(f"  ✓ {dpath}/")
+            print(f"  [OK] {dpath}/")
         else:
-            print(f"  ⚠️  {dpath}/ - Will be created")
+            print(f"  [WARN]  {dpath}/ - Will be created")
             os.makedirs(dpath, exist_ok=True)
     
     return all_ok
 
 def check_models():
     """Check if models are trained."""
-    print("\n🤖 Checking trained models...")
+    print("\n[MODELS] Checking trained models...")
     
     model_files = [
-        'outputs/models/best_model.pkl',
-        'outputs/models/preprocessor.pkl'
+        'outputs/models/best_model_xgboost.pkl',
+        'outputs/models/best_model_random_forest.pkl',
+        'outputs/preprocessors/preprocessor.pkl'
     ]
     
     trained = True
     for mpath in model_files:
         if Path(mpath).exists():
             size = Path(mpath).stat().st_size / 1024  # KB
-            print(f"  ✓ {mpath} ({size:.1f} KB)")
+            print(f"  [OK] {mpath} ({size:.1f} KB)")
         else:
-            print(f"  ✗ {mpath} - NOT TRAINED")
+            print(f"  [FAIL] {mpath} - NOT TRAINED")
             trained = False
     
     if not trained:
-        print("\n  ℹ️  Run training: python src/models.py")
+        print("\n  [INFO]  Run training: python src/models.py")
     
     return trained
 
 def check_analyses():
     """Check if analyses have been run."""
-    print("\n📊 Checking analysis outputs...")
+    print("\n[ANALYSIS] Checking analysis outputs...")
     
     analysis_files = [
-        'outputs/figures/temporal_trends.png',
-        'outputs/figures/chemical_space_pca.png',
-        'outputs/analysis/temporal_analysis.json'
+        'outputs/figures/temporal_trend.png',
+        'outputs/figures/chemical_space_pca_2d.png',
+        'outputs/analysis/temporal_trends.json'
     ]
     
     completed = 0
     for apath in analysis_files:
         if Path(apath).exists():
-            print(f"  ✓ {apath}")
+            print(f"  [OK] {apath}")
             completed += 1
         else:
-            print(f"  ✗ {apath} - NOT GENERATED")
+            print(f"  [FAIL] {apath} - NOT GENERATED")
     
     if completed < len(analysis_files):
-        print("\n  ℹ️  Run analyses: python run_comprehensive_analysis.py")
+        print("\n  [INFO]  Run analyses: python run_comprehensive_analysis.py")
     
     return completed == len(analysis_files)
 
 def check_api():
     """Check if API can be imported."""
-    print("\n🌐 Checking API...")
+    print("\n[API] Checking API...")
     try:
         from app.backend.main import app
-        print("  ✓ API module imports successfully")
+        print("  [OK] API module imports successfully")
         return True
     except Exception as e:
-        print(f"  ✗ API import failed: {e}")
+        print(f"  [FAIL] API import failed: {e}")
         return False
 
 def main():
     print("="*60)
-    print("🐝 APISTOX SETUP VERIFICATION")
+    print("[API] APISTOX SETUP VERIFICATION")
     print("="*60)
     
-    print("\n🐍 Checking Python environment...")
+    print("\n[PYTHON] Checking Python environment...")
     py_ok = check_python_version()
     
-    print("\n📦 Checking dependencies...")
+    print("\n[DEPS] Checking dependencies...")
     deps_ok, missing = check_dependencies()
     
     file_ok = check_file_structure()
@@ -166,14 +171,14 @@ def main():
     }
     
     for check, status in checks.items():
-        symbol = "✅" if status else "❌"
+        symbol = "[PASS]" if status else "[FAIL]"
         print(f"{symbol} {check}")
     
     all_ok = all(checks.values())
     
     if not all_ok:
         print("\n" + "="*60)
-        print("⚠️  SETUP INCOMPLETE - Follow these steps:")
+        print("[WARN]  SETUP INCOMPLETE - Follow these steps:")
         print("="*60)
         
         if not deps_ok:
@@ -188,21 +193,22 @@ def main():
             print("\n3. Run analyses:")
             print("   python run_comprehensive_analysis.py")
         
-        print("\n📖 See SETUP_GUIDE.md for detailed instructions")
+        print("\n[DOCS] See SETUP_GUIDE.md for detailed instructions")
     else:
         print("\n" + "="*60)
-        print("✅ SETUP COMPLETE!")
+        print("[PASS] SETUP COMPLETE!")
         print("="*60)
-        print("\n🚀 Next steps:")
+        print("\n[NEXT] Next steps:")
         print("   1. Start API: python -m uvicorn app.backend.main:app --reload --port 8000")
         print("   2. Start frontend: cd app/frontend && npm run dev")
         print("   3. Open browser: http://localhost:5173")
-        print("\n📚 Documentation: http://localhost:8000/docs")
+        print("\n[DOCS] Documentation: http://localhost:8000/docs")
     
     return 0 if all_ok else 1
 
 if __name__ == "__main__":
     sys.exit(main())
+
 
 
 
