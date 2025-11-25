@@ -8,15 +8,15 @@ pydantic==2.5.0
 python-multipart==0.0.6
 
 # ML Core (smaller versions for Lambda size limits)
-numpy==1.26.2
-scikit-learn==1.4.0
-xgboost==2.0.3
-joblib==1.3.2
+numpy>=1.26.0
+scikit-learn>=1.4.0
+xgboost>=2.0.3
+joblib>=1.3.2
 rdkit==2023.9.5; python_version < "3.13"
 rdkit>=2024.3.1; python_version >= "3.13"
 
 # Data processing
-pandas==2.1.4
+pandas>=2.1.4
 
 # Analysis & Visualization
 plotly==5.18.0
