@@ -158,5 +158,37 @@
       "toxic": 0.019297465682029724
     },
     "timestamp": "2025-11-24T02:03:46.477351"
+  },
+  {
+    "source": "ECOTOX",
+    "year": 2018,
+    "toxicity_type": "Oral",
+    "herbicide": 0,
+    "fungicide": 1,
+    "insecticide": 0,
+    "other_agrochemical": 0,
+    "MolecularWeight": 350.5,
+    "LogP": 3.2,
+    "NumHDonors": 2,
+    "NumHAcceptors": 4,
+    "NumRotatableBonds": 5,
+    "NumAromaticRings": 2,
+    "TPSA": 65.3,
+    "NumHeteroatoms": 5,
+    "NumRings": 2,
+    "NumSaturatedRings": 0,
+    "NumAliphaticRings": 0,
+    "FractionCSP3": 0.25,
+    "MolarRefractivity": 95.5,
+    "BertzCT": 850.0,
+    "HeavyAtomCount": 25,
+    "prediction": 0,
+    "prediction_label": "Non-toxic",
+    "confidence": 0.9937096238136292,
+    "probabilities": {
+      "non_toxic": 0.9937096238136292,
+      "toxic": 0.00629037618637085
+    },
+    "timestamp": "2025-11-25T11:55:19.905937"
   }
 ]
