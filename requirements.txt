@@ -21,9 +21,10 @@ pandas==2.1.4
 plotly==5.18.0
 scipy==1.11.4
 
-# Interpretability (optional - may exceed size limits)
-# shap==0.43.0  # Comment out if Lambda size exceeded
-# lime==0.2.0.1
+# Interpretability
+shap==0.43.0
+lime==0.2.0.1
 
-# If you need SHAP/LIME, consider using Vercel Pro or splitting into microservices
+# Deployment
+requests==2.31.0
 
