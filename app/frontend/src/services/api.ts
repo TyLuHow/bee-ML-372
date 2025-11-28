@@ -43,9 +43,14 @@ export interface PredictionInput {
 
 export interface PredictionResult {
   prediction: number
-  label_text: string
-  probability_toxic: number
-  probability_non_toxic: number
+  label_text?: string
+  prediction_label?: string
+  probability_toxic?: number
+  probability_non_toxic?: number
+  probabilities?: {
+    toxic: number
+    non_toxic: number
+  }
   confidence: number
   timestamp: string
 }

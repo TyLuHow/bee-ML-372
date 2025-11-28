@@ -1,8 +1,12 @@
 interface PredictionResult {
   prediction: number
-  label_text: string
-  probability_toxic: number
-  probability_non_toxic: number
+  label_text?: string
+  probability_toxic?: number
+  probability_non_toxic?: number
+  probabilities?: {
+    toxic: number
+    non_toxic: number
+  }
   confidence: number
   timestamp: string
 }
@@ -61,9 +65,13 @@ const ResultDisplay = ({ result, loading, error }: Props) => {
   const isToxic = result.prediction === 1
   const confidencePct = Math.round(result.confidence * 100)
   
-  // Calculate probabilities with fallbacks
-  const probSafe = result.probability_non_toxic ?? (1 - result.confidence)
-  const probToxic = result.probability_toxic ?? result.confidence
+  // Calculate probabilities with fallbacks (handle both flat and nested API response formats)
+  const probSafe = result.probability_non_toxic 
+    ?? result.probabilities?.non_toxic 
+    ?? (result.prediction === 0 ? result.confidence : 1 - result.confidence)
+  const probToxic = result.probability_toxic 
+    ?? result.probabilities?.toxic 
+    ?? (result.prediction === 1 ? result.confidence : 1 - result.confidence)
   const safePercent = Math.max(0, Math.min(100, probSafe * 100))
   const toxicPercent = Math.max(0, Math.min(100, probToxic * 100))
   
