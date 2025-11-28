@@ -289,7 +289,12 @@ async def predict(input_data: PredictionInput):
         response = {
             "prediction": int(prediction),
             "prediction_label": "Toxic" if prediction == 1 else "Non-toxic",
+            "label_text": "Toxic" if prediction == 1 else "Non-toxic",
             "confidence": float(probabilities[prediction]),
+            # Flat fields for frontend compatibility
+            "probability_toxic": float(probabilities[1]),
+            "probability_non_toxic": float(probabilities[0]),
+            # Nested format for API consumers
             "probabilities": {
                 "non_toxic": float(probabilities[0]),
                 "toxic": float(probabilities[1])
