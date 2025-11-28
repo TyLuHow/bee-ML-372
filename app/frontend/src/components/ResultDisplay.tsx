@@ -61,6 +61,12 @@ const ResultDisplay = ({ result, loading, error }: Props) => {
   const isToxic = result.prediction === 1
   const confidencePct = Math.round(result.confidence * 100)
   
+  // Calculate probabilities with fallbacks
+  const probSafe = result.probability_non_toxic ?? (1 - result.confidence)
+  const probToxic = result.probability_toxic ?? result.confidence
+  const safePercent = Math.max(0, Math.min(100, probSafe * 100))
+  const toxicPercent = Math.max(0, Math.min(100, probToxic * 100))
+  
   // Theme configuration based on result
   const theme = isToxic 
     ? {
@@ -107,22 +113,32 @@ const ResultDisplay = ({ result, loading, error }: Props) => {
         </div>
         
         {/* Probability Bar */}
-        <div className="h-4 bg-gray-200 rounded-full overflow-hidden flex">
+        <div className="h-5 bg-gray-100 rounded-full overflow-hidden flex shadow-inner">
           <div 
-            className="bg-emerald-500 h-full transition-all duration-1000 ease-out relative group"
-            style={{ width: `${result.probability_non_toxic * 100}%` }}
+            className="h-full transition-all duration-1000 ease-out relative group"
+            style={{ 
+              width: `${safePercent}%`,
+              background: 'linear-gradient(90deg, #10b981 0%, #34d399 100%)'
+            }}
           >
-            <span className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded transition-opacity">
-              Safe: {(result.probability_non_toxic * 100).toFixed(1)}%
-            </span>
+            {safePercent > 15 && (
+              <span className="absolute inset-0 flex items-center justify-center text-white text-xs font-bold drop-shadow">
+                {safePercent.toFixed(0)}%
+              </span>
+            )}
           </div>
           <div 
-            className="bg-rose-500 h-full transition-all duration-1000 ease-out relative group"
-            style={{ width: `${result.probability_toxic * 100}%` }}
+            className="h-full transition-all duration-1000 ease-out relative group"
+            style={{ 
+              width: `${toxicPercent}%`,
+              background: 'linear-gradient(90deg, #f87171 0%, #ef4444 100%)'
+            }}
           >
-            <span className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded transition-opacity">
-              Toxic: {(result.probability_toxic * 100).toFixed(1)}%
-            </span>
+            {toxicPercent > 15 && (
+              <span className="absolute inset-0 flex items-center justify-center text-white text-xs font-bold drop-shadow">
+                {toxicPercent.toFixed(0)}%
+              </span>
+            )}
           </div>
         </div>
         <div className="flex justify-between mt-2 text-xs text-gray-400 font-medium">
