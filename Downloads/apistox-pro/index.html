@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApisTox - Bee Toxicity Prediction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              serif: ['Lora', 'serif'],
+              display: ['Playfair Display', 'serif'],
+              mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
+            },
+            colors: {
+              'journal-bg': '#FFFCF5', // Warm paper
+              'journal-surface': '#FFFFFF',
+              'journal-text': '#1C1917', // Warm black
+              'journal-dim': '#57534E',
+              'journal-border': '#E7E5E4',
+              'journal-accent': '#D97706', // Amber/Honey
+              'journal-green': '#4D7C0F', // Leaf Green
+              'journal-red': '#BE123C', // Rose Red
+              'journal-maroon': '#7C2D12', // Deep wine/maroon
+            },
+            boxShadow: {
+              'paper': '0 1px 2px 0 rgba(0, 0, 0, 0.03)',
+              'card-subtle': '0 1px 3px 0 rgba(0, 0, 0, 0.04)',
+              'lifted': '0 2px 8px 0 rgba(0, 0, 0, 0.06)',
+            },
+            transitionDuration: {
+              'quick': '150ms',
+              'smooth': '200ms',
+              'gentle': '250ms',
+            },
+            transitionTimingFunction: {
+              'elegant': 'cubic-bezier(0.4, 0, 0.2, 1)',
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        background-color: #FFFCF5;
+        color: #1C1917;
+      }
+      /* Subtle organic texture overlay */
+      .paper-texture {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 50;
+      }
+
+      /* Quick fade animation */
+      @keyframes quickFadeIn {
+        from { opacity: 0; transform: translateY(4px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .animate-fade-in {
+        animation: quickFadeIn 250ms ease-out;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.556.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <div class="paper-texture"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
