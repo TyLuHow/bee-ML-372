@@ -1,5 +1,6 @@
 export interface ChemicalData {
   name: string;
+  smiles?: string;
   mw: number;
   logP: number;
   exposure: string;
