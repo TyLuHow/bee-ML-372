@@ -86,51 +86,69 @@ class ToxicityPredictor:
             DataFrame with features ready for model prediction, or None if error
         """
         try:
-            # Extract SMILES if provided, otherwise we'll need to work with provided features
+            # Extract SMILES if provided, otherwise use provided molecular descriptors
             smiles = compound_data.get('smiles', '')
 
-            # Compute molecular descriptors from SMILES
+            # Compute molecular descriptors from SMILES if available
             if smiles:
                 descriptors = self.featurizer.smiles_to_descriptors(smiles)
                 if descriptors is None:
                     logger.error(f"Invalid SMILES: {smiles}")
                     return None
             else:
-                # No SMILES provided - use default values
-                descriptors = {name: 0.0 for name in self.featurizer.feature_names}
+                # Use provided molecular descriptors from frontend
+                descriptors = {}
+                for feature_name in self.featurizer.feature_names:
+                    # Try multiple possible field names (handle aliases)
+                    value = compound_data.get(feature_name)
+                    if value is None and feature_name == 'MolecularWeight':
+                        value = compound_data.get('mw') or compound_data.get('molecular_weight')
+                    elif value is None and feature_name == 'LogP':
+                        value = compound_data.get('logP') or compound_data.get('logp')
+                    elif value is None and feature_name == 'NumAromaticRings':
+                        value = compound_data.get('AromaticRings')
+                    elif value is None and feature_name == 'NumRings':
+                        value = compound_data.get('RingCount')
+                    elif value is None and feature_name == 'FractionCSP3':
+                        value = compound_data.get('FractionCsp3')
+
+                    descriptors[feature_name] = float(value) if value is not None else 0.0
 
             # Create base feature dictionary
             features = {
-                # Basic properties from frontend
-                'year': 2024,  # Default year
+                # Year from frontend or default
+                'year': compound_data.get('year', 2024),
                 **descriptors,  # Add all molecular descriptors
             }
 
+            # Add binary pesticide flags
+            features['insecticide'] = compound_data.get('insecticide', 0)
+            features['herbicide'] = compound_data.get('herbicide', 0)
+            features['fungicide'] = compound_data.get('fungicide', 0)
+            features['other_agrochemical'] = compound_data.get('other_agrochemical', 0)
+
             # Handle categorical features - use one-hot encoding matching training
-            # Note: These need to match the exact feature names from training
-            category = compound_data.get('category', 'Other')
-            exposure = compound_data.get('exposure', 'Contact')
+            source = compound_data.get('source', 'Unknown')
+            toxicity_type = compound_data.get('toxicity_type') or compound_data.get('exposure') or compound_data.get('exposure_route', 'Contact')
 
-            # Source encoding (match training - we'll use 'Other' as default)
-            features['source_PPDB'] = 0
-            features['source_Other'] = 1  # Drop first is True, so we encode non-reference
+            # Source encoding (drop first, so we encode non-ECOTOX sources)
+            features['source_PPDB'] = 1 if source == 'PPDB' else 0
+            features['source_BPDB'] = 1 if source == 'BPDB' else 0
+            features['source_Other'] = 1 if source not in ['ECOTOX', 'PPDB', 'BPDB'] else 0
 
-            # Toxicity type encoding (exposure route)
-            # Common types: Contact, Oral, Systemic
-            features['toxicity_type_Oral'] = 1 if 'Oral' in exposure else 0
-            features['toxicity_type_Contact'] = 1 if 'Contact' in exposure else 0
+            # Toxicity type encoding (drop first, so we encode non-Contact types)
+            features['toxicity_type_Oral'] = 1 if 'Oral' in toxicity_type else 0
+            features['toxicity_type_Systemic'] = 1 if 'Systemic' in toxicity_type else 0
+            features['toxicity_type_Other'] = 1 if 'Other' in toxicity_type and 'Contact' not in toxicity_type else 0
 
             # Create DataFrame with single row
             feature_df = pd.DataFrame([features])
-
-            # Ensure all expected features are present (model was trained on specific feature set)
-            # The preprocessor/scaler expects specific columns in specific order
-            # We'll let it handle any missing columns by filling with 0
 
             return feature_df
 
         except Exception as e:
             logger.error(f"Error preparing features: {e}")
+            logger.exception(e)
             return None
 
     def predict(self, compound_data: Dict) -> Dict:

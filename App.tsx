@@ -1190,12 +1190,13 @@ const DataTab = () => {
             </div>
           </div>
 
-          <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 flex items-center justify-center">
-            <div className="text-center text-gray-400">
-              <BarChart3 size={64} className="mx-auto mb-3 opacity-30" />
-              <p className="text-sm font-medium">Target Distribution Chart</p>
-              <p className="text-xs mt-1">(Figure placeholder)</p>
-            </div>
+          <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+            <h4 className="font-medium text-gray-700 mb-3 text-center text-sm">Target Distribution</h4>
+            <img
+              src="/figures/target_distribution.png"
+              alt="Target class distribution showing toxic vs non-toxic compounds"
+              className="w-full rounded-lg"
+            />
           </div>
         </div>
       </section>
@@ -1276,12 +1277,13 @@ const ModelTab = () => {
             <div className="px-4 py-2 bg-gray-50 text-xs text-gray-500">+ 7 more descriptors</div>
           </div>
 
-          <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 flex items-center justify-center">
-            <div className="text-center text-gray-400">
-              <Atom size={64} className="mx-auto mb-3 opacity-30" />
-              <p className="text-sm font-medium">Molecular Descriptor Distributions</p>
-              <p className="text-xs mt-1">(Figure placeholder)</p>
-            </div>
+          <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+            <h4 className="font-medium text-gray-700 mb-3 text-center text-sm">Descriptor Distributions</h4>
+            <img
+              src="/figures/molecular_descriptors.png"
+              alt="Histograms of molecular descriptor distributions"
+              className="w-full rounded-lg"
+            />
           </div>
         </div>
       </section>
@@ -1357,6 +1359,21 @@ const ModelTab = () => {
           XGBoost selected based on highest validation F1 score. Gradient boosting excels at structured tabular data with feature interactions.
         </p>
       </section>
+
+      {/* Toxic vs Non-Toxic Comparison */}
+      <section>
+        <h3 className="text-xl font-bold text-journal-text mb-4">Toxic vs Non-Toxic: Key Differences</h3>
+        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+          <img
+            src="/figures/toxicity_comparison.png"
+            alt="Boxplots comparing molecular properties between toxic and non-toxic compounds"
+            className="w-full rounded-lg"
+          />
+          <p className="text-sm text-journal-dim mt-3 text-center">
+            Boxplots showing statistically significant differences in molecular properties between toxic and non-toxic compounds.
+          </p>
+        </div>
+      </section>
     </div>
   );
 };
@@ -1376,14 +1393,12 @@ const ScienceTab = () => {
       {/* SHAP Summary Plot */}
       <section>
         <h3 className="text-xl font-bold text-journal-text mb-4">SHAP Summary Plot</h3>
-        <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-card-subtle">
-          <div className="flex items-center justify-center h-64 bg-gray-50 rounded-lg">
-            <div className="text-center text-gray-400">
-              <FileText size={64} className="mx-auto mb-3 opacity-30" />
-              <p className="text-sm font-medium">SHAP Beeswarm Plot</p>
-              <p className="text-xs mt-1">(Figure placeholder: /figures/shap_summary.png)</p>
-            </div>
-          </div>
+        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-card-subtle">
+          <img
+            src="/figures/shap_summary.png"
+            alt="SHAP beeswarm plot showing feature impact on predictions"
+            className="w-full rounded-lg"
+          />
         </div>
         <div className="mt-4 bg-blue-50 rounded-xl p-5 border border-blue-200">
           <h4 className="font-bold text-blue-800 mb-2">How to Read This Plot</h4>
@@ -1400,14 +1415,12 @@ const ScienceTab = () => {
       <section>
         <h3 className="text-xl font-bold text-journal-text mb-4">Feature Importance Ranking</h3>
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-card-subtle">
-            <div className="flex items-center justify-center h-64 bg-gray-50 rounded-lg">
-              <div className="text-center text-gray-400">
-                <BarChart3 size={64} className="mx-auto mb-3 opacity-30" />
-                <p className="text-sm font-medium">SHAP Feature Importance</p>
-                <p className="text-xs mt-1">(Figure placeholder)</p>
-              </div>
-            </div>
+          <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-card-subtle">
+            <img
+              src="/figures/shap_importance.png"
+              alt="Bar chart of SHAP feature importance"
+              className="w-full rounded-lg"
+            />
           </div>
           <div className="space-y-4">
             <h4 className="font-bold text-journal-text">Top Predictors Explained</h4>
@@ -1439,6 +1452,22 @@ const ScienceTab = () => {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Correlation Analysis */}
+      <section>
+        <h3 className="text-xl font-bold text-journal-text mb-4">Feature Correlations</h3>
+        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-card-subtle">
+          <img
+            src="/figures/feature_correlations.png"
+            alt="Correlation heatmap of molecular features"
+            className="w-full rounded-lg"
+          />
+        </div>
+        <p className="text-sm text-journal-dim mt-3">
+          Heatmap showing Pearson correlations between features. Strong correlations (e.g., MolecularWeight ↔ HeavyAtomCount)
+          indicate redundant information, but tree-based models handle this well.
+        </p>
       </section>
 
       {/* Limitations & Ethics */}
