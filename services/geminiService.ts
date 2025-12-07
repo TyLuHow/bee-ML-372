@@ -61,7 +61,13 @@ export const analyzeChemicalToxicity = async (data: ChemicalData): Promise<Predi
  */
 function fallbackPrediction(data: ChemicalData): PredictionResult {
   // Generate deterministic hash from compound properties
-  const hashInput = `${data.name}-${data.category}-${data.mw}-${data.logP}`;
+  // Handle undefined values gracefully
+  const name = data.name || 'unknown';
+  const category = data.category || 'Other';
+  const mw = data.mw || data.MolecularWeight || 0;
+  const logP = data.logP || data.LogP || 0;
+
+  const hashInput = `${name}-${category}-${mw}-${logP}`;
   const hash = Array.from(hashInput).reduce((acc, char) => acc + char.charCodeAt(0), 0);
 
   // Decision logic based on chemical properties and category
@@ -150,34 +156,38 @@ function calculateConfidence(data: ChemicalData, hash: number): number {
  */
 function generateExplanation(data: ChemicalData, isToxic: boolean): string {
   const compound = data.name || "this compound";
+  const category = data.category || "pesticide";
+  const mw = data.mw || data.MolecularWeight || 0;
+  const logP = data.logP || data.LogP || 0;
+  const exposure = data.exposure || data.toxicity_type || "contact";
 
   if (isToxic) {
-    if (data.category === "Insecticide") {
-      if (data.logP > 3) {
-        return `${compound} exhibits high lipophilicity (LogP: ${data.logP}), suggesting strong accumulation in bee tissues and neural membranes. The ${data.category.toLowerCase()} mode of action likely targets neurotransmitter systems shared between pest insects and pollinators, resulting in elevated acute toxicity risk.`;
+    if (category === "Insecticide") {
+      if (logP > 3) {
+        return `${compound} exhibits high lipophilicity (LogP: ${logP}), suggesting strong accumulation in bee tissues and neural membranes. The ${category.toLowerCase()} mode of action likely targets neurotransmitter systems shared between pest insects and pollinators, resulting in elevated acute toxicity risk.`;
       }
-      return `Analysis indicates ${compound} falls within the molecular weight range (${data.mw} g/mol) and ${data.exposure.toLowerCase()} exposure profile commonly associated with bee-toxic compounds. Structural similarity to known neonicotinoid or pyrethroid patterns suggests impairment of acetylcholine receptors critical for bee navigation and foraging behavior.`;
+      return `Analysis indicates ${compound} falls within the molecular weight range (${mw} g/mol) and ${exposure.toLowerCase()} exposure profile commonly associated with bee-toxic compounds. Structural similarity to known neonicotinoid or pyrethroid patterns suggests impairment of acetylcholine receptors critical for bee navigation and foraging behavior.`;
     }
 
-    if (data.category === "Fungicide") {
-      return `While fungicides typically show lower bee toxicity, ${compound}'s elevated LogP (${data.logP}) indicates potential bioaccumulation. Chronic exposure through contaminated pollen or nectar may disrupt bee immune function or synergize with other stressors in the hive environment.`;
+    if (category === "Fungicide") {
+      return `While fungicides typically show lower bee toxicity, ${compound}'s elevated LogP (${logP}) indicates potential bioaccumulation. Chronic exposure through contaminated pollen or nectar may disrupt bee immune function or synergize with other stressors in the hive environment.`;
     }
 
-    return `${compound} demonstrates physicochemical properties (MW: ${data.mw} g/mol, LogP: ${data.logP}) that suggest potential bioavailability and tissue penetration in Apis mellifera. The ${data.exposure.toLowerCase()} route presents significant exposure risk during foraging activities.`;
+    return `${compound} demonstrates physicochemical properties (MW: ${mw} g/mol, LogP: ${logP}) that suggest potential bioavailability and tissue penetration in Apis mellifera. The ${exposure.toLowerCase()} route presents significant exposure risk during foraging activities.`;
   } else {
-    if (data.category === "Herbicide") {
-      return `${compound} targets plant-specific metabolic pathways (photosynthesis or amino acid synthesis) not present in honey bees. The molecular profile (MW: ${data.mw} g/mol, LogP: ${data.logP}) suggests low bioaccumulation potential and minimal interaction with bee neurological or physiological systems.`;
+    if (category === "Herbicide") {
+      return `${compound} targets plant-specific metabolic pathways (photosynthesis or amino acid synthesis) not present in honey bees. The molecular profile (MW: ${mw} g/mol, LogP: ${logP}) suggests low bioaccumulation potential and minimal interaction with bee neurological or physiological systems.`;
     }
 
-    if (data.category === "Fungicide") {
-      return `The compound shows a favorable safety profile for pollinators, with LogP (${data.logP}) indicating limited cuticle penetration and molecular weight (${data.mw} g/mol) suggesting reduced bioavailability. Fungal-specific targets minimize off-target effects on bee cellular processes.`;
+    if (category === "Fungicide") {
+      return `The compound shows a favorable safety profile for pollinators, with LogP (${logP}) indicating limited cuticle penetration and molecular weight (${mw} g/mol) suggesting reduced bioavailability. Fungal-specific targets minimize off-target effects on bee cellular processes.`;
     }
 
-    if (data.logP < 2) {
-      return `${compound}'s low lipophilicity (LogP: ${data.logP}) limits cuticular absorption and neural tissue accumulation. Combined with the ${data.exposure.toLowerCase()} exposure profile, this suggests minimal acute or chronic toxicity to foraging bees under typical field application conditions.`;
+    if (logP < 2) {
+      return `${compound}'s low lipophilicity (LogP: ${logP}) limits cuticular absorption and neural tissue accumulation. Combined with the ${exposure.toLowerCase()} exposure profile, this suggests minimal acute or chronic toxicity to foraging bees under typical field application conditions.`;
     }
 
-    return `Molecular analysis of ${compound} reveals properties inconsistent with bee-toxic compounds in our training dataset. The ${data.mw} g/mol molecular weight and moderate lipophilicity (LogP: ${data.logP}) suggest favorable environmental degradation and low bioaccumulation potential.`;
+    return `Molecular analysis of ${compound} reveals properties inconsistent with bee-toxic compounds in our training dataset. The ${mw} g/mol molecular weight and moderate lipophilicity (LogP: ${logP}) suggest favorable environmental degradation and low bioaccumulation potential.`;
   }
 }
 
@@ -185,19 +195,22 @@ function generateExplanation(data: ChemicalData, isToxic: boolean): string {
  * Generates actionable recommendations based on toxicity assessment
  */
 function generateRecommendation(data: ChemicalData, isToxic: boolean): string {
+  const exposure = data.exposure || data.toxicity_type || "contact";
+  const category = data.category || "pesticide";
+
   if (isToxic) {
-    if (data.exposure.includes("Contact")) {
+    if (exposure.includes("Contact")) {
       return "Recommend avoiding application during bloom periods and implementing strict spray drift management protocols. Consider alternative formulations with reduced contact exposure or systemic alternatives with delayed bee-accessible residues.";
     }
-    if (data.exposure.includes("Oral")) {
+    if (exposure.includes("Oral")) {
       return "Prioritize EPA OECD 245 chronic oral toxicity testing before field deployment. Implement buffer zones around pollinator-attractive crops and restrict application during active foraging hours (10 AM - 4 PM).";
     }
-    if (data.exposure.includes("Systemic")) {
+    if (exposure.includes("Systemic")) {
       return "Conduct extended residue studies on pollen and nectar to establish safe application timing windows. Consider seed treatment limitations and soil incorporation methods to minimize plant uptake during bloom.";
     }
     return "Proceed with comprehensive acute contact (OECD 214) and oral (OECD 213) toxicity bioassays before commercial development. Explore structural modifications to reduce bee exposure or toxicity while maintaining target pest efficacy.";
   } else {
-    if (data.category === "Insecticide") {
+    if (category === "Insecticide") {
       return "While preliminary assessment suggests lower bee toxicity, confirm with targeted semi-field tunnel studies (OECD 75) to validate safety under realistic foraging conditions. Monitor for sublethal effects on navigation and learning.";
     }
     return "Model suggests favorable pollinator safety profile. Recommend proceeding with tier-1 laboratory screening (OECD 213/214) to confirm predictions, followed by streamlined field registration testing. Consider marketing as a bee-safe alternative to increase adoption.";
