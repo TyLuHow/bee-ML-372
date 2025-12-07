@@ -1,12 +1,16 @@
 # Nixpacks configuration for Railway deployment
 # This file configures the Python environment and build process
 # FIX: Use python311Packages.pip instead of just 'pip' to avoid undefined variable error
+# FIX: Disable npm build phase - this is a Python-only backend
 
 [phases.setup]
 nixPkgs = ["python311", "python311Packages.pip"]
 
 [phases.install]
 cmds = ["pip install --break-system-packages -r backend/requirements.txt"]
+
+[phases.build]
+cmds = []
 
 [start]
 cmd = "cd backend && uvicorn api.main:app --host 0.0.0.0 --port $PORT"
