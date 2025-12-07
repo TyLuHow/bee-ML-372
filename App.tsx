@@ -23,7 +23,11 @@ import {
   ShieldCheck,
   ShieldAlert,
   Settings,
-  FlaskConical
+  FlaskConical,
+  Download,
+  Dna,
+  Cpu,
+  BarChart2
 } from 'lucide-react';
 import { ChemicalData, PredictionResult, TabView, Scenario, CompoundData } from './types';
 import { analyzeChemicalToxicity } from './services/geminiService';
@@ -58,6 +62,23 @@ const SectionHeader = ({ title, subtitle }: { title: string, subtitle?: string }
 );
 
 // --- Page Views ---
+
+// Icon helper for rendering lucide icons
+const renderIcon = (iconName: string, size: number = 20) => {
+  const icons: Record<string, any> = {
+    database: Database,
+    settings: Settings,
+    microscope: Microscope,
+    flower2: Flower2,
+    flaskConical: FlaskConical,
+    search: Search,
+    sparkles: Sparkles,
+    shieldCheck: ShieldCheck,
+    shieldAlert: ShieldAlert,
+  };
+  const IconComponent = icons[iconName];
+  return IconComponent ? <IconComponent size={size} /> : null;
+};
 
 const PredictionEngine = () => {
   const [loading, setLoading] = useState(false);
@@ -1041,23 +1062,6 @@ const ScenariosView = () => {
 
 type ScienceTabId = 'data' | 'model' | 'science';
 
-// Icon helper for rendering lucide icons
-const renderIcon = (iconName: string, size: number = 20) => {
-  const icons: Record<string, any> = {
-    database: Database,
-    settings: Settings,
-    microscope: Microscope,
-    flower2: Flower2,
-    flaskConical: FlaskConical,
-    search: Search,
-    sparkles: Sparkles,
-    shieldCheck: ShieldCheck,
-    shieldAlert: ShieldAlert,
-  };
-  const IconComponent = icons[iconName];
-  return IconComponent ? <IconComponent size={size} /> : null;
-};
-
 const ScienceView = () => {
   const [activeSubTab, setActiveSubTab] = useState<ScienceTabId>('data');
 
@@ -1260,15 +1264,30 @@ const ModelTab = () => {
         <h3 className="text-xl font-bold text-journal-text mb-4">ML Pipeline Overview</h3>
         <div className="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200">
           <div className="flex flex-wrap justify-center items-center gap-3 text-sm">
-            <div className="bg-blue-500 text-white px-4 py-2 rounded-lg font-medium shadow-card-subtle">📥 Data Ingestion</div>
-            <div className="text-slate-400">→</div>
-            <div className="bg-purple-500 text-white px-4 py-2 rounded-lg font-medium shadow-card-subtle">🧬 Feature Engineering</div>
-            <div className="text-slate-400">→</div>
-            <div className="bg-amber-500 text-white px-4 py-2 rounded-lg font-medium shadow-card-subtle">⚙️ Preprocessing</div>
-            <div className="text-slate-400">→</div>
-            <div className="bg-green-500 text-white px-4 py-2 rounded-lg font-medium shadow-card-subtle">🤖 Model Training</div>
-            <div className="text-slate-400">→</div>
-            <div className="bg-red-500 text-white px-4 py-2 rounded-lg font-medium shadow-card-subtle">📊 Evaluation</div>
+            <div className="bg-journal-accent/90 text-white px-4 py-3 rounded-lg font-medium shadow-card-subtle flex items-center gap-2">
+              <Download size={18} />
+              <span>Data Ingestion</span>
+            </div>
+            <ArrowRight className="text-slate-400" size={20} />
+            <div className="bg-purple-600 text-white px-4 py-3 rounded-lg font-medium shadow-card-subtle flex items-center gap-2">
+              <Dna size={18} />
+              <span>Feature Engineering</span>
+            </div>
+            <ArrowRight className="text-slate-400" size={20} />
+            <div className="bg-amber-600 text-white px-4 py-3 rounded-lg font-medium shadow-card-subtle flex items-center gap-2">
+              <Settings size={18} />
+              <span>Preprocessing</span>
+            </div>
+            <ArrowRight className="text-slate-400" size={20} />
+            <div className="bg-emerald-600 text-white px-4 py-3 rounded-lg font-medium shadow-card-subtle flex items-center gap-2">
+              <Cpu size={18} />
+              <span>Model Training</span>
+            </div>
+            <ArrowRight className="text-slate-400" size={20} />
+            <div className="bg-rose-600 text-white px-4 py-3 rounded-lg font-medium shadow-card-subtle flex items-center gap-2">
+              <BarChart2 size={18} />
+              <span>Evaluation</span>
+            </div>
           </div>
         </div>
       </section>
