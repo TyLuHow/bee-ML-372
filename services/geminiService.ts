@@ -9,15 +9,20 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
  */
 export const analyzeChemicalToxicity = async (data: ChemicalData): Promise<PredictionResult> => {
   try {
-    // Prepare request payload matching backend API schema
-    const requestBody = {
-      name: data.name,
-      smiles: data.smiles || undefined,
-      category: data.category,
-      mw: data.mw,
-      logP: data.logP,
-      exposure: data.exposure,
-    };
+    // Prepare request payload - send ALL fields to backend for accurate predictions
+    const requestBody: any = {};
+
+    // Copy all defined fields from ChemicalData
+    for (const [key, value] of Object.entries(data)) {
+      if (value !== undefined && value !== null && value !== '') {
+        requestBody[key] = value;
+      }
+    }
+
+    // Ensure backwards compatibility with aliases
+    if (data.mw && !requestBody.MolecularWeight) requestBody.MolecularWeight = data.mw;
+    if (data.logP && !requestBody.LogP) requestBody.LogP = data.logP;
+    if (data.exposure && !requestBody.toxicity_type) requestBody.toxicity_type = data.exposure;
 
     // Call backend prediction API
     const response = await fetch(`${API_URL}/predict`, {

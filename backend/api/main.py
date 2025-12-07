@@ -42,13 +42,53 @@ app.add_middleware(
 
 # Request/Response Models
 class CompoundInput(BaseModel):
-    """Input model for toxicity prediction request"""
-    name: str = Field(..., description="Compound name")
+    """Input model for toxicity prediction request - accepts all dataset fields"""
+    # Basic Information
+    name: Optional[str] = Field(None, description="Compound name")
+    CID: Optional[int] = Field(None, description="PubChem Compound ID")
+    CAS: Optional[str] = Field(None, description="CAS registry number")
     smiles: Optional[str] = Field(None, description="SMILES string representation")
-    category: str = Field(..., description="Pesticide category (Insecticide, Fungicide, Herbicide, Other)")
-    molecular_weight: Optional[float] = Field(None, alias="mw", description="Molecular weight (g/mol)")
-    logp: Optional[float] = Field(None, alias="logP", description="LogP (lipophilicity)")
-    exposure_route: str = Field(..., alias="exposure", description="Exposure route (Contact, Oral, Systemic)")
+
+    # Data Source & Classification
+    source: Optional[str] = Field(None, description="Data source (ECOTOX, PPDB, BPDB)")
+    year: Optional[int] = Field(None, description="Registration year")
+    toxicity_type: Optional[str] = Field(None, description="Toxicity type (Contact, Oral, Systemic, Other)")
+    exposure: Optional[str] = Field(None, description="Exposure route (alias for toxicity_type)")
+    exposure_route: Optional[str] = Field(None, description="Exposure route (alias for toxicity_type)")
+
+    # Pesticide Classification (binary flags 0/1)
+    category: Optional[str] = Field(None, description="Pesticide category (Insecticide, Fungicide, Herbicide, Other)")
+    insecticide: Optional[int] = Field(None, description="Insecticide flag (0 or 1)")
+    herbicide: Optional[int] = Field(None, description="Herbicide flag (0 or 1)")
+    fungicide: Optional[int] = Field(None, description="Fungicide flag (0 or 1)")
+    other_agrochemical: Optional[int] = Field(None, description="Other agrochemical flag (0 or 1)")
+
+    # Molecular Descriptors (all 15+ descriptors)
+    MolecularWeight: Optional[float] = Field(None, description="Molecular weight (g/mol)")
+    mw: Optional[float] = Field(None, description="Molecular weight (alias)")
+    molecular_weight: Optional[float] = Field(None, description="Molecular weight (alias)")
+    LogP: Optional[float] = Field(None, description="LogP (lipophilicity)")
+    logP: Optional[float] = Field(None, description="LogP (alias)")
+    logp: Optional[float] = Field(None, description="LogP (alias)")
+    NumHDonors: Optional[int] = Field(None, description="Number of hydrogen bond donors")
+    NumHAcceptors: Optional[int] = Field(None, description="Number of hydrogen bond acceptors")
+    NumRotatableBonds: Optional[int] = Field(None, description="Number of rotatable bonds")
+    NumAromaticRings: Optional[int] = Field(None, description="Number of aromatic rings")
+    AromaticRings: Optional[int] = Field(None, description="Number of aromatic rings (alias)")
+    TPSA: Optional[float] = Field(None, description="Topological polar surface area")
+    NumHeteroatoms: Optional[int] = Field(None, description="Number of heteroatoms")
+    NumRings: Optional[int] = Field(None, description="Number of rings")
+    RingCount: Optional[int] = Field(None, description="Number of rings (alias)")
+    NumSaturatedRings: Optional[int] = Field(None, description="Number of saturated rings")
+    NumAliphaticRings: Optional[int] = Field(None, description="Number of aliphatic rings")
+    FractionCSP3: Optional[float] = Field(None, description="Fraction of sp3 carbons")
+    FractionCsp3: Optional[float] = Field(None, description="Fraction of sp3 carbons (alias)")
+    MolarRefractivity: Optional[float] = Field(None, description="Molar refractivity")
+    BertzCT: Optional[float] = Field(None, description="Bertz complexity index")
+    HeavyAtomCount: Optional[int] = Field(None, description="Number of heavy (non-hydrogen) atoms")
+    NumAromaticAtoms: Optional[int] = Field(None, description="Number of aromatic atoms")
+    NumAromaticCarbocycles: Optional[int] = Field(None, description="Number of aromatic carbocycles")
+    NumSaturatedCarbocycles: Optional[int] = Field(None, description="Number of saturated carbocycles")
 
     class Config:
         populate_by_name = True
@@ -144,18 +184,14 @@ async def predict_toxicity(compound: CompoundInput):
         # Get predictor instance
         predictor = get_predictor()
 
-        # Prepare compound data
-        compound_data = {
-            'name': compound.name,
-            'smiles': compound.smiles or '',
-            'category': compound.category,
-            'molecular_weight': compound.molecular_weight,
-            'logp': compound.logp,
-            'exposure_route': compound.exposure_route
-        }
+        # Prepare compound data - pass all fields to predictor
+        compound_data = compound.dict(by_alias=True, exclude_none=True)
+
+        # Ensure we have at least a name for logging
+        compound_name = compound_data.get('name') or compound_data.get('CAS') or 'Unknown Compound'
 
         # Generate prediction
-        logger.info(f"Processing prediction request for: {compound.name}")
+        logger.info(f"Processing prediction request for: {compound_name}")
         result = predictor.predict(compound_data)
 
         logger.info(f"Prediction complete: {result['toxicity']} (confidence: {result['confidence']}%)")
