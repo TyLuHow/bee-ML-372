@@ -18,7 +18,12 @@ import {
   Play,
   BarChart3,
   FileText,
-  Atom
+  Atom,
+  Sparkles,
+  ShieldCheck,
+  ShieldAlert,
+  Settings,
+  FlaskConical
 } from 'lucide-react';
 import { ChemicalData, PredictionResult, TabView, Scenario, CompoundData } from './types';
 import { analyzeChemicalToxicity } from './services/geminiService';
@@ -433,7 +438,7 @@ const scenarioData: Scenario[] = [
   {
     id: 'almond-grower',
     title: "The Almond Grower's Decision",
-    icon: '🌸',
+    icon: 'flower2',
     userType: 'Maria Rodriguez, California Almond Farmer',
     context: "Maria manages 800 acres of almonds with 1,600 rented bee colonies ($290K in rental fees). A mid-bloom aphid outbreak threatens her $8.8M crop, and she needs to spray within 48 hours while bees are actively foraging.",
     stakes: "$340K at risk (bee rentals + penalty clause)",
@@ -501,7 +506,7 @@ const scenarioData: Scenario[] = [
   {
     id: 'rd-screening',
     title: "The R&D Startup's $3M Decision",
-    icon: '🔬',
+    icon: 'flaskConical',
     userType: 'NexGen AgroSciences, Fungicide Development Team',
     context: "The team has synthesized 40 novel fungicide candidates. Before committing $62K per compound for EPA bee toxicity testing (OECD 213/214/245), they need to prioritize which candidates to advance.",
     stakes: "$2.5M potential savings + 6-month timeline acceleration",
@@ -569,7 +574,7 @@ const scenarioData: Scenario[] = [
   {
     id: 'beekeeper-investigation',
     title: "The Beekeeper's Investigation",
-    icon: '🔍',
+    icon: 'search',
     userType: 'James Patterson, Commercial Beekeeper (Iowa)',
     context: "James discovered 48 of his 200 colonies collapsed with dead bees at hive entrances. He suspects pesticide exposure from neighboring corn/soybean farms but lab results take 2-3 weeks. He needs to decide whether to move remaining colonies immediately.",
     stakes: "$52K at risk (lost colonies + prevented losses)",
@@ -737,7 +742,9 @@ const ScenariosView = () => {
                 : 'border-journal-border bg-white hover:border-journal-accent/40'
             }`}
           >
-            <div className="text-5xl mb-4">{scenario.icon}</div>
+            <div className="mb-4 p-4 bg-journal-accent/10 rounded-xl w-fit">
+              {renderIcon(scenario.icon, 40)}
+            </div>
             <h3 className="font-bold font-display text-lg mb-2">{scenario.title}</h3>
             <p className="text-xs font-bold text-journal-dim uppercase tracking-wider">{scenario.userType.split(',')[0]}</p>
           </button>
@@ -1034,13 +1041,30 @@ const ScenariosView = () => {
 
 type ScienceTabId = 'data' | 'model' | 'science';
 
+// Icon helper for rendering lucide icons
+const renderIcon = (iconName: string, size: number = 20) => {
+  const icons: Record<string, any> = {
+    database: Database,
+    settings: Settings,
+    microscope: Microscope,
+    flower2: Flower2,
+    flaskConical: FlaskConical,
+    search: Search,
+    sparkles: Sparkles,
+    shieldCheck: ShieldCheck,
+    shieldAlert: ShieldAlert,
+  };
+  const IconComponent = icons[iconName];
+  return IconComponent ? <IconComponent size={size} /> : null;
+};
+
 const ScienceView = () => {
   const [activeSubTab, setActiveSubTab] = useState<ScienceTabId>('data');
 
   const tabs = [
-    { id: 'data' as ScienceTabId, label: 'The Data', icon: '📊' },
-    { id: 'model' as ScienceTabId, label: 'The Model', icon: '⚙️' },
-    { id: 'science' as ScienceTabId, label: 'The Science', icon: '🔬' },
+    { id: 'data' as ScienceTabId, label: 'The Data', icon: 'database' },
+    { id: 'model' as ScienceTabId, label: 'The Model', icon: 'settings' },
+    { id: 'science' as ScienceTabId, label: 'The Science', icon: 'microscope' },
   ];
 
   return (
@@ -1063,7 +1087,7 @@ const ScienceView = () => {
                   : 'text-journal-dim hover:bg-amber-50'
               }`}
             >
-              <span className="mr-2">{tab.icon}</span>
+              <span className="mr-2">{renderIcon(tab.icon)}</span>
               {tab.label}
             </button>
           ))}
@@ -1204,7 +1228,9 @@ const DataTab = () => {
       {/* No Missing Values */}
       <section className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-6 border border-emerald-200">
         <div className="flex items-start space-x-4">
-          <div className="text-3xl">✨</div>
+          <div className="p-2 bg-emerald-100 rounded-lg">
+            <Sparkles size={24} className="text-emerald-600" />
+          </div>
           <div>
             <h4 className="font-bold text-emerald-800 mb-1">Clean Data, No Missing Values</h4>
             <p className="text-sm text-emerald-700 leading-relaxed">
@@ -1475,7 +1501,10 @@ const ScienceTab = () => {
         <h3 className="text-xl font-bold text-journal-text mb-4">Limitations & Ethical Use</h3>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
-            <h4 className="font-bold text-slate-800 mb-3">⚠️ Model Limitations</h4>
+            <h4 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
+              <ShieldAlert size={20} className="text-slate-600" />
+              Model Limitations
+            </h4>
             <ul className="text-sm text-slate-600 space-y-2">
               <li>• Predictions are probabilistic, not definitive</li>
               <li>• Training data may not cover all chemical classes</li>
@@ -1484,7 +1513,10 @@ const ScienceTab = () => {
             </ul>
           </div>
           <div className="bg-emerald-50 rounded-xl p-5 border border-emerald-200">
-            <h4 className="font-bold text-emerald-800 mb-3">✅ Responsible Use</h4>
+            <h4 className="font-bold text-emerald-800 mb-3 flex items-center gap-2">
+              <ShieldCheck size={20} className="text-emerald-600" />
+              Responsible Use
+            </h4>
             <ul className="text-sm text-emerald-700 space-y-2">
               <li>• Use as screening tool, not final assessment</li>
               <li>• Apply precautionary principle when uncertain</li>
