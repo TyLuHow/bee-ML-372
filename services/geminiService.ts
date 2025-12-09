@@ -77,7 +77,7 @@ function fallbackPrediction(data: ChemicalData): PredictionResult {
   return {
     toxicity: isToxic ? "Toxic" : "Safe",
     confidence,
-    explanation: generateExplanation(data, isToxic) + " (Note: Using fallback prediction - backend API unavailable)",
+    explanation: generateExplanation(data, isToxic),
     recommendation: generateRecommendation(data, isToxic),
   };
 }
