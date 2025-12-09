@@ -38,16 +38,19 @@ python -c "import xgboost; print(f\"  xgboost: {xgboost.__version__}\")" || echo
 python -c "import rdkit; print(f\"  rdkit: {rdkit.__version__}\")" || echo "  ERROR: rdkit not found"\n\
 echo ""\n\
 echo "Checking model files..."\n\
-ls -lh backend/models/ || echo "  ERROR: Models directory not found"\n\
+ls -lh /app/backend/models/ || echo "  ERROR: Models directory not found"\n\
 echo ""\n\
 echo "Starting uvicorn server on 0.0.0.0:${PORT:-8080}"\n\
 echo "================================"\n\
-cd backend && exec python -m uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-8080}' > /app/start.sh
+exec python -m uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-8080}' > /app/backend/start.sh
 
-RUN chmod +x /app/start.sh
+RUN chmod +x /app/backend/start.sh
+
+# Set working directory to backend
+WORKDIR /app/backend
 
 # Expose port
 EXPOSE 8080
 
 # Start the application
-CMD ["/bin/bash", "/app/start.sh"]
+CMD ["/bin/bash", "start.sh"]
