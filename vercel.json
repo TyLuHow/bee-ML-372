@@ -6,7 +6,7 @@
   "installCommand": "npm install && pip install -r backend/requirements.txt",
   "functions": {
     "api/**/*.py": {
-      "runtime": "python3.9@3.9.0",
+      "runtime": "@vercel/python@4.3.0",
       "maxDuration": 10,
       "memory": 1024
     }
