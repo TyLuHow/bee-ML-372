@@ -1,7 +1,7 @@
 import { ChemicalData, PredictionResult } from "../types";
 
-// Get API URL from environment variable or default to localhost
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// Get API URL from environment variable or use relative path for Vercel deployment
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
  * ML-powered toxicity analysis service using the trained backend API.
