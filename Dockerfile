@@ -1,5 +1,5 @@
-# Use official Python runtime
-FROM python:3.11-slim
+# Use Python 3.12 for compatibility with scikit-learn 1.7.2 and rdkit
+FROM python:3.12-slim
 
 WORKDIR /app
 
