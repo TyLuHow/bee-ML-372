@@ -15,7 +15,7 @@ rdkit==2025.9.3
 
 # Data Processing
 pandas==2.2.3
-numpy==1.26.4
+numpy==2.2.1  # Latest with Python 3.13 wheels (2.3.5 might break compatibility)
 
 # Utilities
 python-multipart==0.0.20
